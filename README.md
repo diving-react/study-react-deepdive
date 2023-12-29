@@ -3,7 +3,25 @@
 
 <br>
 
+## 주차별 학습 로드맵
+
+| 회차 | 주제 | 날짜 |
+| --- | --- | --- |
+| 1 | 리액트 개발을 위해 꼭 알아야 할 자바스크립트 | 2023/01/02 |
+| 2 | 리액트 핵심 요소 깊게 살펴보기 | 2023/01/09 |
+| 3 | 리액트 훅 깊게 살펴보기 | 2023/01/17 |
+| 4 | 서버 사이드 렌더링 | 2023/01/25 |
+| 5 | 리액트와 상태 관리 라이브러리 | 2023/02/01 |
+| 6 | 리액트 개발 도구로 디버깅하기 | 2023/02/08 |
+| 10 | 리액트 17과 18의 변경 사항 살펴보기 | 2023/02/15 |
+| 11 | Next.js 13과 리액트 18 | 2023/02/22 |
+| 12 | 모든 웹 개발자가 관심을 가져야 할 핵심 웹 지표 | 2023/03/01 |
+| 13 | 웹페이지의 성능을 측정하는 다양한 방법 | 2023/03/08 |
+| 14 | 웹사이트 보안을 위한 리액트와 웹페이지 보안 이슈 | 2023/03/15 |
+
+<br>
+
 ## 💪 Participants
-<a href="https://github.com/diving-react/study-react-deepdive/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=diving-react/study-react-deepdive" />
+<a href="https://github.com/functionBee/study-react-deepdive/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=functionBee/study-react-deepdive" />
 </a>
