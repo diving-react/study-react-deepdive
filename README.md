@@ -1,3 +1,4 @@
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fdiving-react%2Fstudy-react-deepdive&count_bg=%23003366&title_bg=%234673A0&icon=pinboard.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 # study-react-deepdive
 모던 리액트 Deep Dive
 
