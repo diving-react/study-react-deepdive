@@ -43,6 +43,6 @@
 <br>
 
 ## 💪 Participants
-<a href="https://github.com/functionBee/study-react-deepdive/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=functionBee/study-react-deepdive" />
+<a href="https://github.com/diving-react/study-react-deepdive/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=diving-react/study-react-deepdive" />
 </a>
