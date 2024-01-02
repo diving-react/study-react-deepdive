@@ -16,6 +16,13 @@
     - [1.2.1 함수란 무엇인가?](#121-함수란-무엇인가)
     - [1.2.2 함수를 정의하는 4가지 방법](#122-함수를-정의하는-4가지-방법)
     - [1.2.3 다양한 함수 살펴보기](#123-다양한-함수-살펴보기)
+    - [1.2.4 함수를 만들 때 주의해야 할 사항](#124-함수를-만들-때-주의해야-할-사항)
+    - [1.2.5 정리](#125-정리)
+  - [1.3 클래스](#13-클래스)
+    - [1.3.1 클래스란 무엇인가?](#131-클래스란-무엇인가)
+    - [1.3.2 클래스와 함수의 관계](#132-클래스와-함수의-관계)
+    - [1.3.3 정리](#133-정리)
+  - [1.4 클로저](#14-클로저)
     - [1.4.1 클로저의 정의](#141-클로저의-정의)
     - [1.4.2 변수의 유효 범위, 스코프](#142-변수의-유효-범위-스코프)
     - [1.4.3 클로저의 활용](#143-클로저의-활용)
@@ -300,9 +307,11 @@ const person = {
     ```
 
 - getter와 settter:
+
   - getter와 setter는 클래스 내부의 프로퍼티 값을 읽거나 변경할 때 사용하는 함수
   - getter: 클래스 내부의 프로퍼티 값을 사용할 때 호출되는 함수
   - setter: 클래스 내부의 프로퍼티 값을 변경할 때 호출되는 함수
+
   ```javascript
   class Person {
     constructor(name, age) {
@@ -327,13 +336,16 @@ const person = {
     }
   }
   ```
+
 - method:
+
   - 클래스 내부에서 선언한 함수
   - 클래스 내부에 `constructor` 함수를 제외한 모든 함수는 `prototype` 객체의 프로퍼티로 등록됨
   - prototype` 객체의 프로퍼티로 등록되는 이유는 메모리 효율성 때문
   - 클래스 내부에 선언한 함수는 인스턴스를 생성할 때마다 새로 만들어지지 않고, `prototype` 객체에 등록되기 때문에 메모리를 효율적으로 사용할 수 있음
   - Object.getPrototypeOf 함수를 통해 클래스의 prototype 객체에 접근할 수 있음
   - 클래스의 prototype 객체에 접근하면 클래스 내부에 선언한 모든 함수에 접근할 수 있음
+
   ```javascript
   class Person {
     constructor(name, age) {
@@ -363,12 +375,15 @@ const person = {
   console.log(person.getName()); // Lee
   console.log(person.getAge()); // 20
   ```
+
 - static method:
+
   - 클래스 내부에 선언한 함수 앞에 static 키워드를 붙이면, 클래스의 정적(static) 메서드가 됨
   - 정적 메서드는 클래스의 인스턴스를 생성하지 않아도 호출할 수 있음
   - 정적 메서드는 클래스의 인스턴스를 생성하지 않아도 호출할 수 있기 때문에, 유틸리티 함수를 만들 때 사용
   - this를 사용할 수 없음
   - 리액트 클래스 컴포넌트에서는 라이프사이클 메서드를 정적 메서드로 만들면 안 됨
+
   ```javascript
   class Person {
     constructor(name, age) {
@@ -384,10 +399,13 @@ const person = {
   const person = new Person("Lee", 20);
   console.log(Person.getPersonName(person)); // Lee
   ```
+
 - inheritance:
+
   - 클래스는 상속을 통해 기존 클래스를 확장하여 새로운 클래스를 만들 수 있음
   - 상속을 통해 클래스를 확장할 때는 extends 키워드를 사용
   - 상속을 통해 클래스를 확장할 때는 super 키워드를 사용
+
   ```javascript
   class Person {
     constructor(name) {
