@@ -1,16 +1,21 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fdiving-react%2Fstudy-react-deepdive&count_bg=%23003366&title_bg=%234673A0&icon=pinboard.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+
 # study-react-deepdive
+
 모던 리액트 Deep Dive
 
 <br>
 
 ## 스터디 소개
+
 [모던 리액트 Deep Dive](https://wikibook.co.kr/react-deep-dive/) 책을 기반으로 한 스터디입니다.
+
 > (참고) [예제코드](https://github.com/wikibook/react-deep-dive-example)
 
 <br>
 
 ## 스터디 진행 방식
+
 - 참석이 어려우신 경우, 미리 연락 주시어 불참을 알려주시기 바랍니다.
 - 스터디 모임은 매주 화요일 저녁 9시에 시작됩니다.
 - 첫 모임은 2024년 1월 2일 화요일 저녁 9시에 예정되어 있습니다.
@@ -23,29 +28,27 @@
   - 작업 완료 후 메인 브랜치로 병합하기 위한 Pull Request를 할 때도 같은 이름 규칙을 적용해 주세요.
 - MD 생성 규칙:
   - 챕터/닉네임.md 로 만들어주세요. - 예: 공부 중인 챕터가 'chapter01'이고 닉네임이 'hyeok999'경우, "chapter01/hyeok999.md" 작성
-  
 
 <br>
 
 ## 주차별 학습 로드맵
 
-| 회차 | 주제 | 날짜 |
-| --- | --- | --- |
-| 1 | 리액트 개발을 위해 꼭 알아야 할 자바스크립트 | 2024/01/02 |
-| 2 | 리액트 핵심 요소 깊게 살펴보기 | 2024/01/09 |
-| 3 | 리액트 훅 깊게 살펴보기 | 2024/01/16 |
-| 4 | 서버 사이드 렌더링 | 2024/01/23 |
-| 5 | 리액트와 상태 관리 라이브러리 | 2024/01/30 |
-| 6 | 리액트 개발 도구로 디버깅하기 | 2024/02/06 |
-| 10 | 리액트 17과 18의 변경 사항 살펴보기 | 2024/02/13 |
-| 11 | Next.js 13과 리액트 18 | 2024/02/20 |
-| 12 | 모든 웹 개발자가 관심을 가져야 할 핵심 웹 지표 | 2024/02/27 |
-| 13 | 웹페이지의 성능을 측정하는 다양한 방법 | 2024/03/05 |
-| 14 | 웹사이트 보안을 위한 리액트와 웹페이지 보안 이슈 | 2024/03/12 |
+| 회차 | 주제                                             | 날짜       |
+| ---- | ------------------------------------------------ | ---------- |
+| 1    | 리액트 개발을 위해 꼭 알아야 할 자바스크립트     | 2024/01/02 |
+| 2    | 리액트 핵심 요소 깊게 살펴보기                   | 2024/01/09 |
+| 3    | 리액트 훅 깊게 살펴보기                          | 2024/01/16 |
+| 4    | 서버 사이드 렌더링                               | 2024/01/23 |
+| 5    | 리액트와 상태 관리 라이브러리                    | 2024/01/30 |
+| 6    | 리액트 개발 도구로 디버깅하기                    | 2024/02/06 |
+| 10   | 리액트 17과 18의 변경 사항 살펴보기              | 2024/02/13 |
+| 11   | Next.js 13과 리액트 18                           | 2024/02/20 |
+| 12   | 모든 웹 개발자가 관심을 가져야 할 핵심 웹 지표   | 2024/02/27 |
+| 13   | 웹페이지의 성능을 측정하는 다양한 방법           | 2024/03/05 |
+| 14   | 웹사이트 보안을 위한 리액트와 웹페이지 보안 이슈 | 2024/03/12 |
 
 <br>
 
 ## 💪 Participants
-<a href="https://github.com/diving-react/study-react-deepdive/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=diving-react/study-react-deepdive" />
-</a>
+
+<table><tr><td align="center"><a href="https://github.com/functionBee"><img alt="functionBee" src="https://avatars.githubusercontent.com/u/48350491?v=4" width="117" /><br />functionBee</a></td><td align="center"><a href="https://github.com/wogus216"><img alt="wogus216" src="https://avatars.githubusercontent.com/u/71995287?v=4" width="117" /><br />wogus216</a></td><td align="center"><a href="https://github.com/PositiveConfident"><img alt="PositiveConfident" src="https://avatars.githubusercontent.com/u/119862256?v=4" width="117" /><br />PositiveConfident</a></td><td align="center"><a href="https://github.com/hyjoong"><img alt="hyjoong" src="https://avatars.githubusercontent.com/u/70426440?v=4" width="117" /><br />hyjoong</a></td></tr><tr><td align="center"><a href="https://github.com/suneunkim"><img alt="suneunkim" src="https://avatars.githubusercontent.com/u/98196225?v=4" width="117" /><br />suneunkim</a></td><td align="center"><a href="https://github.com/skiende74"><img alt="skiende74" src="https://avatars.githubusercontent.com/u/86130706?v=4" width="117" /><br />skiende74</a></td><td align="center"><a href="https://github.com/JungHun98"><img alt="JungHun98" src="https://avatars.githubusercontent.com/u/97653343?v=4" width="117" /><br />JungHun98</a></td></tr></table>
