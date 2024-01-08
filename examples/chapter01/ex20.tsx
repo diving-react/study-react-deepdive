@@ -1,7 +1,7 @@
 /**
  * @description React.memo의 깊은 비교
  */
-import React, { memo, useState } from "react";
+import React, { memo, useState } from 'react';
 
 type SimpleProps = {
   counter: number;
@@ -9,7 +9,7 @@ type SimpleProps = {
 
 // 얕은 비교를 수행하는 컴포넌트
 const ComponentProps = memo(function ComponentProps(props: SimpleProps) {
-  console.log("ComponentProps 렌더링");
+  console.log('ComponentProps 렌더링');
   return <div>{props.counter}</div>;
 });
 
@@ -22,7 +22,7 @@ type DeeperProps = {
 // 깊은 비교를 수행하는 컴포넌트
 const ComponentDeeperProps = memo(
   function ComponentDeeperProps(props: DeeperProps) {
-    console.log("ComponentDeeperProps 렌더링");
+    console.log('ComponentDeeperProps 렌더링');
     return <div>{props.counter.value}</div>;
   },
   (prevProps, nextProps) => {
