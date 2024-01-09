@@ -12,12 +12,17 @@
     - [2.1.4 정리](#214-정리)
   - [2.2 가상 DOM과 리액트 파이버](#22-가상-dom과-리액트-파이버)
     - [2.2.1 DOM과 브라우저 렌더링 과정](#221-dom과-브라우저-렌더링-과정)
+      - [DOM(Document Object Model)](#domdocument-object-model)
+      - [브라우저가 웹 사이트 접근 요청을 받고 화면을 그리는 과정](#브라우저가-웹-사이트-접근-요청을-받고-화면을-그리는-과정)
+      - [CRP(Critical Rendering Path):](#crpcritical-rendering-path)
     - [2.2.2 가상 DOM의 탄생 배경](#222-가상-dom의-탄생-배경)
     - [2.2.3 가상 DOM을 위한 아키텍처, 리액트 파이버](#223-가상-dom을-위한-아키텍처-리액트-파이버)
     - [2.2.4 파이버와 가상 DOM](#224-파이버와-가상-dom)
     - [2.2.5 정리](#225-정리)
   - [2.3 클래스형 컴포넌트와 함수형 컴포넌트](#23-클래스형-컴포넌트와-함수형-컴포넌트)
     - [2.3.1 클래스형 컴포넌트](#231-클래스형-컴포넌트)
+      - [생명주기(life cycle) 메서드가 실행되는 시점](#생명주기life-cycle-메서드가-실행되는-시점)
+      - [클래스 컴포넌트의 생명주기 메서드 호출 순서](#클래스-컴포넌트의-생명주기-메서드-호출-순서)
     - [2.3.2 함수형 컴포넌트](#232-함수형-컴포넌트)
     - [2.3.3 함수형 컴포넌트 vs. 클래스형 컴포넌트](#233-함수형-컴포넌트-vs-클래스형-컴포넌트)
     - [2.3.4 정리](#234-정리)
@@ -162,19 +167,20 @@ export default App;
 
 ### 2.2.1 DOM과 브라우저 렌더링 과정
 
-- DOM(Document Object Model): HTML 문서의 구조를 표현하는 트리 구조 형태의 데이터 모델로, 브라우저가 HTML 문서를 파싱한 결과물
+#### DOM(Document Object Model)
+HTML 문서의 구조를 표현하는 트리 구조 형태의 데이터 모델로, 브라우저가 HTML 문서를 파싱한 결과물
 
-**브라우저가 웹 사이트 접근 요청을 받고 화면을 그리는 과정**:
-  1. **URL 입력 또는 링크 클릭:** 사용자가 웹 사이트의 URL을 입력하거나 링크를 클릭하여 웹 사이트에 접근 요청을 보냅니다.
-  2. **DNS 조회:** 브라우저는 해당 URL에 대한 DNS 조회를 수행하여 서버의 IP 주소를 가져옵니다.
-  3. **HTTP 요청:** 브라우저는 서버에 HTTP 요청을 보내고, 요청 메서드(GET, POST 등)와 함께 요청 헤더와 데이터를 포함시킵니다.
-  4. **서버의 응답 처리:** 서버는 요청을 받고, 요청에 따라 필요한 데이터를 처리하여 HTTP 응답을 생성합니다.
-  5. **응답의 파싱:** 서버는 생성된 응답을 브라우저로 보냅니다. 응답은 일반적으로 HTML, CSS, JavaScript, 이미지 등의 리소스로 구성됩니다. 브라우저는 응답을 받아서 파싱하고, HTML 문서를 DOM(Document Object Model) 트리로 변환합니다. CSS 파일도 파싱하여 CSSOM(CSS Object Model) 트리를 생성합니다.
-  6. **리플로우:** DOM 트리와 CSSOM 트리를 사용하여 브라우저는 화면에 요소들을 배치하고 스타일을 적용합니다. 이 과정을 리플로우(Reflow)라고도 합니다. 리플로우는 요소의 크기, 위치, 레이아웃 등을 계산하는 과정입니다.
-  7. **페인팅:** 리플로우 후, 브라우저는 화면에 내용을 그리기 위해 페인팅(Painting) 작업을 수행합니다. 페인팅은 실제로 화면에 픽셀을 그리는 과정입니다.
-  8. **사용자 상호작용 및 JavaScript 실행:** 내용이 그려진 후, 브라우저는 사용자의 입력을 대기하거나 애니메이션 및 이벤트 처리를 위해 JavaScript 코드를 실행합니다.
+#### 브라우저가 웹 사이트 접근 요청을 받고 화면을 그리는 과정
+1. **URL 입력 또는 링크 클릭:** 사용자가 웹 사이트의 URL을 입력하거나 링크를 클릭하여 웹 사이트에 접근 요청을 보냅니다.
+2. **DNS 조회:** 브라우저는 해당 URL에 대한 DNS 조회를 수행하여 서버의 IP 주소를 가져옵니다.
+3. **HTTP 요청:** 브라우저는 서버에 HTTP 요청을 보내고, 요청 메서드(GET, POST 등)와 함께 요청 헤더와 데이터를 포함시킵니다.
+4. **서버의 응답 처리:** 서버는 요청을 받고, 요청에 따라 필요한 데이터를 처리하여 HTTP 응답을 생성합니다.
+5. **응답의 파싱:** 서버는 생성된 응답을 브라우저로 보냅니다. 응답은 일반적으로 HTML, CSS, JavaScript, 이미지 등의 리소스로 구성됩니다. 브라우저는 응답을 받아서 파싱하고, HTML 문서를 DOM(Document Object Model) 트리로 변환합니다. CSS 파일도 파싱하여 CSSOM(CSS Object Model) 트리를 생성합니다.
+6. **리플로우:** DOM 트리와 CSSOM 트리를 사용하여 브라우저는 화면에 요소들을 배치하고 스타일을 적용합니다. 이 과정을 리플로우(Reflow)라고도 합니다. 리플로우는 요소의 크기, 위치, 레이아웃 등을 계산하는 과정입니다.
+7. **페인팅:** 리플로우 후, 브라우저는 화면에 내용을 그리기 위해 페인팅(Painting) 작업을 수행합니다. 페인팅은 실제로 화면에 픽셀을 그리는 과정입니다.
+8. **사용자 상호작용 및 JavaScript 실행:** 내용이 그려진 후, 브라우저는 사용자의 입력을 대기하거나 애니메이션 및 이벤트 처리를 위해 JavaScript 코드를 실행합니다.
 
-**CRP(Critical Rendering Path):** 
+#### CRP(Critical Rendering Path):
 ```mermaid
 graph LR
 A[사용자가 URL 입력] --> B[DNS 조회]
@@ -191,9 +197,6 @@ J --> K[렌더 트리 페인팅]
 K --> L[화면에 페인팅된 요소 보여줌]
 ```
 
-**참고**: 
-  - [MDN, Populating the page: how browsers work - Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work)
-  - [LogRocket Blog, How browser rendering works — behind the scenes](https://blog.logrocket.com/how-browser-rendering-works-behind-scenes/)
 
 ### 2.2.2 가상 DOM의 탄생 배경
 
@@ -223,6 +226,11 @@ K --> L[화면에 페인팅된 요소 보여줌]
 > 16.8버전에서 훅이 등장한 이후 함수 컴포넌트에서 상태나 생명주기 메서드 비슷한 작업을 흉내낼 수 있게 되자 상대적으로 보일러플레이트가 복잡한 클래스 컴포넌트 보다 함수 컴포넌트를 많이 쓰기 시작했다.  
 
 ### 2.3.1 클래스형 컴포넌트
+- React 16.8 이전에는 대부분의 컴포넌트가 클래스 형태로 작성되었습니다.
+- 클래스 컴포넌트를 만들려면 `extends` 키워드를 사용하여 `React.Component`나 `React.PureComponent`를 확장해야 합니다.
+- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고, 
+- `React.PureComponent`는 성능 최적화를 위해 자동으로 `shouldComponentUpdate`를 구현한 클래스입니다.
+- 클래스형 컴포넌트를 만들 때 주로 `props(속성)`, `state(상태)`, `method(메서드)`를 사용하여 정의
 
 ```jsx
 import React, { Component } from 'react';
@@ -266,13 +274,12 @@ class MyComponent extends Component {
 export default MyComponent;
 ```
 
-- React 16.8 이전에는 대부분의 컴포넌트가 클래스 형태로 작성되었습니다.
-  - (참고) [React Hooks](https://reactjs.org/docs/hooks-intro.html)
-- 클래스 컴포넌트를 만들려면 `extends` 키워드를 사용하여 `React.Component`나 `React.PureComponent`를 확장해야 합니다.
-- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고, 
-- `React.PureComponent`는 성능 최적화를 위해 자동으로 `shouldComponentUpdate`를 구현한 클래스입니다.
+#### 생명주기(life cycle) 메서드가 실행되는 시점
+  - 마운트(mount): 컴포넌트가 DOM에 추가되는 것을 의미합니다. 이때 `constructor`, `render`, `componentDidMount` 메서드가 실행됩니다.
+  - 업데이트(update): 컴포넌트의 상태가 변경되는 것을 의미합니다. 이때 `render`, `componentDidUpdate`, `shouldComponentUpdate`, `getSnapshotBeforeUpdate` 메서드가 실행됩니다.
+  - method(메서드): 컴포넌트가 DOM에서 제거되는 것을 의미합니다. 이때 `componentWillUnmount` 메서드가 실행됩니다.
 
-- **클래스형 컴포넌트를 만들 때 주로 사용하는 `props(속성)`, `state(상태)`, `method(메서드)`를 정의하는 방법:**
+각 생명주기 메서드는 특정 시점에 자동으로 호출되며, 해당 시점에 원하는 동작을 구현할 수 있습니다. 이를 활용하여 컴포넌트의 초기화, 데이터 로딩, 상태 업데이트 등을 관리할 수 있습니다.
 
 | 생명주기 메서드   | 실행 시점       | 설명                                                         |
 | ---------------- | --------------- | ------------------------------------------------------------ |
@@ -284,15 +291,8 @@ export default MyComponent;
 | `shouldComponentUpdate` | 업데이트  | 컴포넌트의 업데이트 여부를 결정하는 메서드입니다.             |
 | `getSnapshotBeforeUpdate` | 업데이트 | 실제 DOM에 변화가 반영되기 직전에 호출되는 메서드입니다.       |
 
-- **생명주기(life cycle) 메서드가 실행되는 시점:**
-  - 마운트(mount): 컴포넌트가 DOM에 추가되는 것을 의미합니다. 이때 `constructor`, `render`, `componentDidMount` 메서드가 실행됩니다.
-  - 업데이트(update): 컴포넌트의 상태가 변경되는 것을 의미합니다. 이때 `render`, `componentDidUpdate`, `shouldComponentUpdate`, `getSnapshotBeforeUpdate` 메서드가 실행됩니다.
-  - method(메서드): 컴포넌트가 DOM에서 제거되는 것을 의미합니다. 이때 `componentWillUnmount` 메서드가 실행됩니다.
 
-각 생명주기 메서드는 특정 시점에 자동으로 호출되며, 해당 시점에 원하는 동작을 구현할 수 있습니다. 이를 활용하여 컴포넌트의 초기화, 데이터 로딩, 상태 업데이트 등을 관리할 수 있습니다.
-
-- **클래스 컴포넌트의 생명주기 메서드 호출 순서:**
-  - `constructor` → `getDerivedStateFromProps` → `render` → `componentDidMount` → `componentDidUpdate` → `componentWillUnmount` → `getDerivedStateFromProps` → `shouldComponentUpdate` → `render` → `getSnapshotBeforeUpdate` → `componentDidUpdate`
+#### 클래스 컴포넌트의 생명주기 메서드 호출 순서
 
 ```mermaid
 graph TB
@@ -348,8 +348,10 @@ G --> H[componentWillUnmount]
 
 ## References
 
+- [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 - [JSX Introduction](https://facebook.github.io/jsx/#sec-introl)
 - [React v16.8: The One With Hooks](https://legacy.reactjs.org/blog/2019/02/06/react-v16.8.0.html)
+- [MDN, Populating the page: how browsers work - Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work)
 
 ## Articles
 
@@ -357,3 +359,4 @@ G --> H[componentWillUnmount]
 - [브라우저의 작동 방식](https://web.dev/articles/howbrowserswork?hl=ko)
 - [가상 DOM: 블록으로 돌아가기 - 가상 DOM의 동작 원리](https://million.dev/blog/virtual-dom#visual-example)
 - [Difference between Virtual DOM and Real DOM](https://www.geeksforgeeks.org/difference-between-virtual-dom-and-real-dom/)
+- [LogRocket Blog, How browser rendering works — behind the scenes](https://blog.logrocket.com/how-browser-rendering-works-behind-scenes/)
