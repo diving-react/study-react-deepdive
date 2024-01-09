@@ -248,19 +248,6 @@ export default App;
 
 ### 2.3.1 클래스형 컴포넌트
 
-- React 16.8 이전에는 대부분의 컴포넌트가 클래스 형태로 작성되었습니다.
-  - (참고) [React Hooks](https://reactjs.org/docs/hooks-intro.html)
-- 클래스 컴포넌트를 만들려면 `extends` 키워드를 사용하여 `React.Component`나 `React.PureComponent`를 확장해야 합니다.
-- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고, 
-- `React.PureComponent`는 성능 최적화를 위해 자동으로 `shouldComponentUpdate`를 구현한 클래스입니다.
-
-- **클래스형 컴포넌트를 만들 때 주로 사용하는 `props(속성)`, `state(상태)`, `method(메서드)`를 정의하는 방법:**
-
-- **생명주기(life cycle) 메서드가 실행되는 시점**: 마운트(mount), 업데이트(update), 언마운트(unmount)
-  - **마운트**: 컴포넌트가 DOM에 <u>추가</u>되는 것을 의미
-  - **업데이트**: 컴포넌트의 상태가 <u>변경</u>되는 것을 의미
-  - **언마운트**: 컴포넌트가 DOM에서 <u>제거</u>되는 것을 의미
-
 ```jsx
 import React, { Component } from 'react';
 
@@ -303,19 +290,44 @@ class MyComponent extends Component {
 export default MyComponent;
 ```
 
-- **클래스 컴포넌트의 생명주기 메서드:**
-  - `render`: 컴포넌트가 렌더링될 때 호출되는 메서드
-  - `componentDidMount`: 컴포넌트가 마운트된 직후(렌더링된 직후) 호출되는 메서드
-  - `componentDidUpdate`: 컴포넌트가 업데이트된 직후 호출되는 메서드
-  - `componentWillUnmount`: 컴포넌트가 언마운트되기 직전 호출되는 메서드
-  - `shouldComponentUpdate`: 컴포넌트가 업데이트될 때 호출되는 메서드
-  - `static getDerivedStateFromProps`: 컴포넌트가 마운트된 직후와 업데이트된 직후에 호출되는 메서드
-  - `getSnapshotBeforeUpdate`: 컴포넌트가 업데이트된 직후 호출되는 메서드'
-  - `getDerivedStateFromError`: 컴포넌트 내부에서 에러가 발생했을 때 호출되는 메서드
-  - `componentDidCatch`: 컴포넌트 내부에서 에러가 발생했을 때 호출되는 메서드
+- React 16.8 이전에는 대부분의 컴포넌트가 클래스 형태로 작성되었습니다.
+  - (참고) [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+- 클래스 컴포넌트를 만들려면 `extends` 키워드를 사용하여 `React.Component`나 `React.PureComponent`를 확장해야 합니다.
+- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고, 
+- `React.PureComponent`는 성능 최적화를 위해 자동으로 `shouldComponentUpdate`를 구현한 클래스입니다.
+
+- **클래스형 컴포넌트를 만들 때 주로 사용하는 `props(속성)`, `state(상태)`, `method(메서드)`를 정의하는 방법:**
+
+| 생명주기 메서드   | 실행 시점       | 설명                                                         |
+| ---------------- | --------------- | ------------------------------------------------------------ |
+| `constructor`    | 마운트          | 컴포넌트의 인스턴스가 생성될 때 호출되는 메서드입니다.        |
+| `render`         | 마운트, 업데이트 | 컴포넌트의 UI를 렌더링하는 메서드입니다.                      |
+| `componentDidMount` | 마운트        | 컴포넌트가 DOM에 추가된 후 호출되는 메서드입니다.             |
+| `componentDidUpdate` | 업데이트     | 컴포넌트의 업데이트가 완료된 후 호출되는 메서드입니다.         |
+| `componentWillUnmount` | 언마운트   | 컴포넌트가 DOM에서 제거되기 전에 호출되는 메서드입니다.        |
+| `shouldComponentUpdate` | 업데이트  | 컴포넌트의 업데이트 여부를 결정하는 메서드입니다.             |
+| `getSnapshotBeforeUpdate` | 업데이트 | 실제 DOM에 변화가 반영되기 직전에 호출되는 메서드입니다.       |
+
+- **생명주기(life cycle) 메서드가 실행되는 시점:**
+  - 마운트(mount): 컴포넌트가 DOM에 추가되는 것을 의미합니다. 이때 `constructor`, `render`, `componentDidMount` 메서드가 실행됩니다.
+  - 업데이트(update): 컴포넌트의 상태가 변경되는 것을 의미합니다. 이때 `render`, `componentDidUpdate`, `shouldComponentUpdate`, `getSnapshotBeforeUpdate` 메서드가 실행됩니다.
+  - method(메서드): 컴포넌트가 DOM에서 제거되는 것을 의미합니다. 이때 `componentWillUnmount` 메서드가 실행됩니다.
+
+각 생명주기 메서드는 특정 시점에 자동으로 호출되며, 해당 시점에 원하는 동작을 구현할 수 있습니다. 이를 활용하여 컴포넌트의 초기화, 데이터 로딩, 상태 업데이트 등을 관리할 수 있습니다.
 
 - **클래스 컴포넌트의 생명주기 메서드 호출 순서:**
   - `constructor` → `getDerivedStateFromProps` → `render` → `componentDidMount` → `componentDidUpdate` → `componentWillUnmount` → `getDerivedStateFromProps` → `shouldComponentUpdate` → `render` → `getSnapshotBeforeUpdate` → `componentDidUpdate`
+
+```mermaid
+graph TB
+A[constructor] --> B[static getDerivedStateFromProps]
+B --> C[render]
+C --> D[componentDidMount]
+C --> E[shouldComponentUpdate]
+E --> F[static getSnapshotBeforeUpdate]
+F --> G[componentDidUpdate]
+G --> H[componentWillUnmount]
+```
 
 - **클래스 컴포넌트이 한계**:
 
@@ -323,9 +335,6 @@ export default MyComponent;
 
 - 함수형 컴포넌트는 클래스형 컴포넌트와 달리 `state`나 `lifecycle` 메서드를 사용할 수 없습니다. 그러나 React 16.8 이후부터는 Hooks API를 사용하여 함수형 컴포넌트에서도 상태 관리와 생명주기 기능을 사용할 수 있게 되었습니다.
 
-```tsx
-
-```
 
 ### 2.3.3 함수형 컴포넌트 vs. 클래스형 컴포넌트
 
@@ -364,6 +373,7 @@ export default MyComponent;
 ## References
 
 - [JSX Introduction](https://facebook.github.io/jsx/#sec-introl)
+- [React v16.8: The One With Hooks](https://legacy.reactjs.org/blog/2019/02/06/react-v16.8.0.html)
 
 ## Articles
 

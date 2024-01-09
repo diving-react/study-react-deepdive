@@ -1,8 +1,9 @@
 // p. 148
-import { Component } from "react";
+import React, { Component } from "react";
 
-// 빈 Props를 선언
-type Props = Record<string, never>;
+interface Props {
+  // Props 정의
+}
 
 interface State {
   count: number;
