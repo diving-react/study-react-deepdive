@@ -78,34 +78,29 @@ export default App;
 
 JSXElement는 JSX 문법을 사용하여 생성한 React 컴포넌트를 나타냅니다. JSXElement는 HTML 태그와 유사한 구조를 가지며, React 컴포넌트를 생성하고 렌더링하는 데 사용됩니다.
 
-| 구성 요소             | 설명                                                                                                                                               |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| JSXOpeningElement     | JSXElement의 시작 부분을 나타냅니다. `<`로 시작하고 태그 이름과 속성을 포함합니다.                                                                 |
-| JSXClosingElement     | JSXElement의 끝 부분을 나타냅니다. `</`로 시작하고 태그 이름을 포함합니다.                                                                         |
-| JSXSelfClosingElement | 자체 닫히는 태그를 나타냅니다. `<`로 시작하고 태그 이름과 속성을 포함하며, 마지막에 `/`를 추가하여 자체 닫힘을 표시합니다.                         |
-| JSXFragment           | 빈 태그로 이루어진 구조를 나타냅니다. 여러 개의 컴포넌트를 묶어서 반환할 수 있습니다. `<></>` 형태로 작성되며, 자식 컴포넌트를 포함할 수 있습니다. |
-
-| JSXElement                 | JSXElement의 구성 요소를 조합하여 JSXElement를 생성할 수 있습니다.        |
-| -------------------------- | ------------------------------------------------------------------------- |
-| `<태그이름 />`             | JSXSelfClosingElement를 사용하여 JSXElement를 생성합니다.                 |
-| `<태그이름>...</태그이름>` | JSXOpeningElement와 JSXClosingElement를 사용하여 JSXElement를 생성합니다. |
-| `<></>`                    | JSXFragment를 사용하여 JSXElement를 생성합니다.                           |
+| 구성 요소             | 설명                                                                                     | 예시                            |
+| --------------------- | ---------------------------------------------------------------------------------------- | ------------------------------- |
+| JSXOpeningElement     | JSXElement의 시작 부분을 나타내며, `<`로 시작하고 태그 이름과 속성을 포함합니다.         | `<div>`                         |
+| JSXClosingElement     | JSXElement의 끝 부분을 나타내며, `</`로 시작하고 태그 이름을 포함합니다.                 | `</div>`                        |
+| JSXSelfClosingElement | 자체 닫히는 태그를 나타내며, `<`로 시작하고 태그 이름과 속성을 포함하며, `/`로 닫습니다. | `<img src="image.jpg" />`       |
+| JSXFragment           | 빈 태그로 이루어진 구조를 나타내며, 여러 컴포넌트를 묶어서 반환할 수 있습니다.           | `<></>`                         |
+| JSXElement            | 위의 구성 요소를 조합하여 JSXElement를 생성할 수 있습니다.                               | `<div><span>Hello</span></div>` |
 
 #### JSXElementName
 
 JSXElementName은 JSXElement의 이름을 나타냅니다. JSXElementName은 JSX 문법에서 사용되는 요소의 이름을 정의합니다.
 
-| 구성 요소           | 설명                                                                                                             |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| JSXIdentifier       | JSXElementName의 식별자를 나타냅니다. 식별자는 소문자로 시작하며, 컴포넌트의 이름으로 사용됩니다.                |
-| JSXNamespacedName   | JSXElementName의 네임스페이스 이름을 나타냅니다. 네임스페이스 이름은 콜론으로 구분된 접두사를 포함한 이름입니다. |
-| JSXMemberExpression | JSXElementName의 멤버 표현식을 나타냅니다. 멤버 표현식은 점으로 구분된 속성과 객체의 조합으로 구성됩니다.        |
+| 구성 요소           | 설명                                                                                | 예시                 |
+| ------------------- | ----------------------------------------------------------------------------------- | -------------------- |
+| JSXIdentifier       | JSXElementName의 식별자로, 소문자로 시작하는 컴포넌트의 이름입니다.                 | `<div>`              |
+| JSXNamespacedName   | 네임스페이스가 있는 JSXElementName으로, 콜론으로 구분된 접두사를 포함한 이름입니다. | `<my:component>`     |
+| JSXMemberExpression | 객체의 속성에 접근하는 멤버 표현식으로 구성된 JSXElementName입니다.                 | `<MyComponent.Item>` |
 
-| JSXElementName          | JSXElementName의 구성 요소를 조합하여 JSXElementName을 생성할 수 있습니다. |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `<식별자>`              | JSXIdentifier를 사용하여 JSXElementName을 생성합니다.                      |
-| `<네임스페이스:식별자>` | JSXNamespacedName을 사용하여 JSXElementName을 생성합니다.                  |
-| `<식별자.식별자>`       | JSXMemberExpression을 사용하여 JSXElementName을 생성합니다.                |
+| JSXElementName          | 구성 요소를 조합하여 JSXElementName을 생성할 수 있습니다.                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `<식별자>`              | JSXIdentifier를 사용하여 간단한 JSXElementName을 생성합니다.                               |
+| `<네임스페이스:식별자>` | JSXNamespacedName을 사용하여 네임스페이스가 지정된 컴포넌트 이름을 생성합니다.             |
+| `<식별자.식별자>`       | JSXMemberExpression을 사용하여 객체의 속성을 나타내는 복합적인 컴포넌트 이름을 생성합니다. |
 
 #### JSXAttributes
 
@@ -128,18 +123,18 @@ JSXAttributes는 JSXElement의 속성을 나타냅니다. JSXAttributes는 HTML 
 
 JSXChild는 JSXChildren을 구성하는 자식 요소를 나타냅니다. JSXChild는 JSXText, JSXElement, JSXFragment, JSXChildExpression 중 하나일 수 있으며, 여러 개의 자식 요소가 포함될 수 있습니다.
 
-| 구성 요소          | 설명                                                                                                                                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| JSXText            | JSX에서의 텍스트 노드를 나타냅니다. JSXElement 안에 직접 작성된 텍스트 내용을 나타내며, HTML 태그가 아닌 일반 텍스트로 처리됩니다.                     |
-| JSXElement         | JSX의 기본 구성 요소로, HTML 태그나 다른 컴포넌트를 나타냅니다. JSXElement는 JSXChildren을 가질 수 있으며, 중첩된 구조로 작성할 수 있습니다.           |
-| JSXFragment        | 여러 자식 요소를 그룹화하지만 추가적인 DOM 엘리먼트를 추가하지 않는 컨테이너 역할을 합니다. `<></>` 형태로 작성되며, JSXChildren을 포함할 수 있습니다. |
-| JSXChildExpression | 중괄호 `{}`로 감싼 JavaScript 표현식을 나타냅니다. JSXElement 안에서 동적인 값을 표현하기 위해 사용됩니다.                                             |
+| 구성 요소          | 설명                                                                              | 예시                              |
+| ------------------ | --------------------------------------------------------------------------------- | --------------------------------- |
+| JSXAttribute       | JSX 요소에 추가되는 속성을 나타냅니다.                                            | `type="text"`                     |
+| JSXAttributeName   | JSX 속성의 이름을 나타냅니다.                                                     | `type`                            |
+| JSXAttributeValue  | JSX 속성의 값을 나타내며, 문자열 또는 중괄호 `{}`로 감싼 표현식이 될 수 있습니다. | `"text"` 또는 `{this.state.text}` |
+| JSXSpreadAttribute | 객체의 속성들을 JSX 요소에 스프레드 문법을 사용하여 전개합니다.                   | `{...props}`                      |
 
-| JSXChildren | JSXChildren의 구성 요소를 조합하여 JSXChildren을 생성할 수 있습니다. |
-| ----------- | -------------------------------------------------------------------- |
-| `<텍스트>`  | JSXText를 사용하여 JSXChildren을 생성합니다.                         |
-| `<></>`     | JSXFragment를 사용하여 JSXChildren을 생성합니다.                     |
-| `{표현식}`  | JSXChildExpression을 사용하여 JSXChildren을 생성합니다.              |
+| JSXAttributes의 예                    | 설명                                                                                         |
+| ------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `<input type="text" />`               | `type`이라는 이름의 JSXAttribute를 사용하여 속성을 정의합니다.                               |
+| `<div {...props} />`                  | `props` 객체에 있는 모든 속성을 `<div>` 요소에 스프레드 속성으로 전개합니다.                 |
+| `<button {...props} type="button" />` | `props` 객체를 스프레드 속성으로 전개하고, `type` 속성을 추가하여 JSXAttribute를 조합합니다. |
 
 #### JSXStrings
 
