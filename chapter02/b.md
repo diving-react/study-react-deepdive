@@ -194,9 +194,14 @@ K --> L[화면에 페인팅된 요소 보여줌]
 
 ### 2.2.2 가상 DOM의 탄생 배경
 
+- <u>가상 DOM</u>은 실제 DOM의 메모리 상 복사본입니다. 데이터 변경이 있을 때, 리액트 같은 라이브러리는 메모리에서 변경 사항을 계산하고 최종적으로만 실제 DOM을 업데이트하여 불필요한 렌더링을 줄이고 성능을 향상시킵니다.
 - 리치 해리스는 ["가상 DOM은 순수한 오버헤드입니다"](https://svelte.dev/blog/virtual-dom-is-pure-overhead)라는 글에서 리액트와 같은 프레임워크에서 널리 알려진 기능인 가상 DOM이 많은 개발자가 생각하는 것만큼 효율적이지 않다고 주장합니다. 이어서 그는 이 기능의 작동 방식을 비판하며 대안적인 접근 방식을 제시합니다.
 
 ### 2.2.3 가상 DOM을 위한 아키텍처, 리액트 파이버
+
+![리액트 파이버 아키텍처](https://blog.openreplay.com/images/react-fiber-explained/images/image02.png?width=800px)
+
+![리액트 파이버 트리의 모습](https://assets-global.website-files.com/5d2dd7e1b4a76d8b803ac1aa/5f604fd80b9cb018d27eeda5_UsoMdBUqB9kLNWjrraBggD3QUb-fuTlKw_u6h_vBx5OnMHZnxTYUQcaoZa_nP9fwCA1nWLEvAnAnlwjMDg2io4z7DPJ5LA8K7qSwTs4_rBJHVuZQrEX-TZOzzOPyhN7FEncG91vy.png?width=800px)
 
 ### 2.2.4 파이버와 가상 DOM
 
@@ -206,18 +211,8 @@ K --> L[화면에 페인팅된 요소 보여줌]
 
 ## 2.3 클래스형 컴포넌트와 함수형 컴포넌트
 
-> p.143<br>
-> 0.14버전에서 함수 컴포넌트가 소개됐을 때는 stateless functional component,
-> 이른바 무상태 함수 컴폰너트라고 해서 별도의 상태 없이 단순히 어떠한 요소를 정적으로 렌더링 하는 것이 목적이덨다.
-
-- React 0.14 버전부터는 함수로 선언된 컴포넌트를 사용할 수 있게 되었습니다.
-  - [무상태 함수형 컴포넌트(Stateless Function Components)](https://legacy.reactjs.org/blog/2015/10/07/react-v0.14.html#stateless-function-components)
-  - 클래스 기반 컴포넌트와는 다르게 무상태 함수형 컴포넌트(Stateless Function Components)는 `state`나 `lifecycle` 메소드를 사용할 수 없고, 오직 `props`만을 받아서 UI를 렌더링하는 것을 반환합니다.
-  - React 16.8 버전 이후부터는 Hooks API가 도입되어 함수형 컴포넌트에서도 상태 관리와 생명주기 기능을 사용할 수 있게 되었습니다.
-
-> p.144<br>
-> 이때 당시 함수 컴포넌트는 클래스 컴포넌트에서 별다른 생명주기 메서드나 상태(this.state)가 필요없이 render만 하는 겨우에만 제한적으로 사용되었다.
-> 16.8버전에서 훅이 등장한 이후 함수 컴포넌트에서 상태나 생명주기 메서드 비슷한 작업을 흉내낼 수 있게 되자 상대적으로 보일러플레이트가 복잡한 클래스 컴포넌트 보다 함수 컴포넌트를 많이 쓰기 시작했다.
+- 리액트 0.14버전부터 함수 컴포넌트가 도입되었고, 당시에는 상태나 생명주기 메서드 없이 단순히 `props`를 이용해 UI를 렌더링하는 데 사용되었습니다. 리액트 16.8버전에서 Hooks가 소개된 이후로는 함수 컴포넌트도 상태 관리와 생명주기 기능을 사용할 수 있게 되어, 클래스 컴포넌트 대신 널리 쓰이기 시작했습니다.
+  - (참고) [무상태 함수형 컴포넌트(Stateless Function Components)](https://legacy.reactjs.org/blog/2015/10/07/react-v0.14.html#stateless-function-components)
 
 ### 2.3.1 클래스형 컴포넌트
 
@@ -323,6 +318,18 @@ G --> H[componentWillUnmount]
 ### 2.4.2 리액트의 렌더링이 일어나는 이유
 
 ### 2.4.3 리액트의 렌더링 프로세스
+
+**리액트 코드가 파이버 트리로 변환되는 과정**
+
+```mermaid
+graph TD;
+    A[리액트 컴포넌트 렌더링] -->|createElement 호출| B(JSX 반환)
+    B --> C[엘리먼트 객체 생성]
+    C --> D{파이버 노드 생성}
+    D --> E[리컨실레이션]
+    E --> F[커밋 단계]
+    F --> G[실제 DOM 업데이트]
+```
 
 ### 2.4.4 렌더와 커밋
 
