@@ -173,11 +173,55 @@ export default App;
   7. **페인팅:** 리플로우 후, 브라우저는 화면에 내용을 그리기 위해 페인팅(Painting) 작업을 수행합니다. 페인팅은 실제로 화면에 픽셀을 그리는 과정입니다.
   8. **사용자 상호작용 및 JavaScript 실행:** 내용이 그려진 후, 브라우저는 사용자의 입력을 대기하거나 애니메이션 및 이벤트 처리를 위해 JavaScript 코드를 실행합니다.
 
+- **CRP(Critical Rendering Path):**
+```
++------------------+   +------------------+   +-----------------------+
+|                  |   |                  |   |                       |
+|   HTML Parsing   +--->  DOM Building    +--->  CSS Parsing & Style  |
+|                  |   |                  |   |  Calculations (CSSOM) |
++------------------+   +------------------+   +-----------------------+
+                                                        |
+                                                        |
+                                                        v
+                                              +----------------------+
+                                              |                      |
+                                              | Render Tree Creation |
+                                              |                      |
+                                              +----------------------+
+                                                        |
+                                                        |
+                                                        v
+                                              +----------------------+
+                                              |                      |
+                                              |     Layout/Reflow    |
+                                              |                      |
+                                              +----------------------+
+                                                        |
+                                                        |
+                                                        v
+                                              +----------------------+
+                                              |                      |
+                                              |       Painting       |
+                                              |                      |
+                                              +----------------------+
+                                                        |
+                                                        |
+                                                        v
+                                              +----------------------+
+                                              |                      |
+                                              |     Compositing      |
+                                              |                      |
+                                              +----------------------+
+```
+
+
+- **참고**: 
+  - [MDN, Populating the page: how browsers work - Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work)
+  - [LogRocket Blog, How browser rendering works — behind the scenes](https://blog.logrocket.com/how-browser-rendering-works-behind-scenes/)
+
 ### 2.2.2 가상 DOM의 탄생 배경
 
 - 리치 해리스는 ["가상 DOM은 순수한 오버헤드입니다"](https://svelte.dev/blog/virtual-dom-is-pure-overhead)라는 글에서 리액트와 같은 프레임워크에서 널리 알려진 기능인 가상 DOM이 많은 개발자가 생각하는 것만큼 효율적이지 않다고 주장합니다. 이어서 그는 이 기능의 작동 방식을 비판하며 대안적인 접근 방식을 제시합니다.
-- 가상 DOM은 실제 DOM을 직접 조작하는 것에서 오는 성능 이슈를 해결하기 위해 만들어진 기술입니다. 가상 DOM은 메모리 상에 실제 DOM의 경량화된 복사본을 유지하면서, 실제 DOM과의 차이점을 계산하여 필요한 부분만 실제 DOM에 적용하는 방식으로 동작합니다.
-- 컴포넌트가 렌더링될 때, 가상 DOM은 새로운 상태와 이전 상태를 비교하는 과정(비교(diffing)을 거쳐서 업데이트가 필요한 부분을 파악합니다. 그 후, 가상 DOM은 계산된 차이점을 바탕으로 실제 DOM에 최소한의 변경만을 적용하여 두 상태를 동기화하는 과정(재조정(reconciliation))을 수행합니다. 이러한 과정을 통해 애플리케이션의 성능을 향상시키고, 사용자 경험을 개선할 수 있습니다.
 
 ### 2.2.3 가상 DOM을 위한 아키텍처, 리액트 파이버
 
@@ -310,7 +354,6 @@ class ClassComponent extends React.Component<Props, State> {
 ```
 
 - **생명주기 메서드가 실행되는 시점**: 마운트(mount), 업데이트(update), 언마운트(unmount)
-
   - **마운트**: 컴포넌트가 DOM에 추가되는 것을 의미
   - **업데이트**: 컴포넌트의 상태가 변경되는 것을 의미
   - **언마운트**: 컴포넌트가 DOM에서 제거되는 것을 의미
