@@ -163,7 +163,8 @@ export default App;
 ### 2.2.1 DOM과 브라우저 렌더링 과정
 
 - DOM(Document Object Model): HTML 문서의 구조를 표현하는 트리 구조 형태의 데이터 모델로, 브라우저가 HTML 문서를 파싱한 결과물
-- **브라우저가 웹 사이트 접근 요청을 받고 화면을 그리는 과정**:
+
+**브라우저가 웹 사이트 접근 요청을 받고 화면을 그리는 과정**:
   1. **URL 입력 또는 링크 클릭:** 사용자가 웹 사이트의 URL을 입력하거나 링크를 클릭하여 웹 사이트에 접근 요청을 보냅니다.
   2. **DNS 조회:** 브라우저는 해당 URL에 대한 DNS 조회를 수행하여 서버의 IP 주소를 가져옵니다.
   3. **HTTP 요청:** 브라우저는 서버에 HTTP 요청을 보내고, 요청 메서드(GET, POST 등)와 함께 요청 헤더와 데이터를 포함시킵니다.
@@ -173,49 +174,24 @@ export default App;
   7. **페인팅:** 리플로우 후, 브라우저는 화면에 내용을 그리기 위해 페인팅(Painting) 작업을 수행합니다. 페인팅은 실제로 화면에 픽셀을 그리는 과정입니다.
   8. **사용자 상호작용 및 JavaScript 실행:** 내용이 그려진 후, 브라우저는 사용자의 입력을 대기하거나 애니메이션 및 이벤트 처리를 위해 JavaScript 코드를 실행합니다.
 
-- **CRP(Critical Rendering Path):**
-```
-+------------------+   +------------------+   +-----------------------+
-|                  |   |                  |   |                       |
-|   HTML Parsing   +--->  DOM Building    +--->  CSS Parsing & Style  |
-|                  |   |                  |   |  Calculations (CSSOM) |
-+------------------+   +------------------+   +-----------------------+
-                                                        |
-                                                        |
-                                                        v
-                                              +----------------------+
-                                              |                      |
-                                              | Render Tree Creation |
-                                              |                      |
-                                              +----------------------+
-                                                        |
-                                                        |
-                                                        v
-                                              +----------------------+
-                                              |                      |
-                                              |     Layout/Reflow    |
-                                              |                      |
-                                              +----------------------+
-                                                        |
-                                                        |
-                                                        v
-                                              +----------------------+
-                                              |                      |
-                                              |       Painting       |
-                                              |                      |
-                                              +----------------------+
-                                                        |
-                                                        |
-                                                        v
-                                              +----------------------+
-                                              |                      |
-                                              |     Compositing      |
-                                              |                      |
-                                              +----------------------+
+**CRP(Critical Rendering Path):** 
+```mermaid
+graph LR
+A[사용자가 URL 입력] --> B[DNS 조회]
+B --> C[서버에 HTTP 요청]
+C --> D[서버 응답 받음]
+D --> E[HTML 문서 파싱]
+E --> F[CSS 링크를 만나면]
+F --> G[CSS 파일 다운로드 및 파싱]
+E --> H[DOM 트리 생성]
+G --> H
+H --> I[렌더 트리 생성]
+I --> J[렌더 트리 계산]
+J --> K[렌더 트리 페인팅]
+K --> L[화면에 페인팅된 요소 보여줌]
 ```
 
-
-- **참고**: 
+**참고**: 
   - [MDN, Populating the page: how browsers work - Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work)
   - [LogRocket Blog, How browser rendering works — behind the scenes](https://blog.logrocket.com/how-browser-rendering-works-behind-scenes/)
 
