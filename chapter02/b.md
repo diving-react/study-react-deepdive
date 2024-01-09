@@ -256,10 +256,52 @@ export default App;
 
 - **클래스형 컴포넌트를 만들 때 주로 사용하는 `props(속성)`, `state(상태)`, `method(메서드)`를 정의하는 방법:**
 
-- **생명주기 메서드가 실행되는 시점**: 마운트(mount), 업데이트(update), 언마운트(unmount)
-  - **마운트**: 컴포넌트가 DOM에 추가되는 것을 의미
-  - **업데이트**: 컴포넌트의 상태가 변경되는 것을 의미
-  - **언마운트**: 컴포넌트가 DOM에서 제거되는 것을 의미
+- **생명주기(life cycle) 메서드가 실행되는 시점**: 마운트(mount), 업데이트(update), 언마운트(unmount)
+  - **마운트**: 컴포넌트가 DOM에 <u>추가</u>되는 것을 의미
+  - **업데이트**: 컴포넌트의 상태가 <u>변경</u>되는 것을 의미
+  - **언마운트**: 컴포넌트가 DOM에서 <u>제거</u>되는 것을 의미
+
+```jsx
+import React, { Component } from 'react';
+
+class MyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+
+  componentDidMount() {
+    console.log('Component mounted');
+  }
+
+  componentDidUpdate() {
+    console.log('Component updated');
+  }
+
+  componentWillUnmount() {
+    console.log('Component will unmount');
+  }
+
+  handleClick = () => {
+    this.setState(prevState => ({
+      count: prevState.count + 1
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Count: {this.state.count}</h1>
+        <button onClick={this.handleClick}>Increase Count</button>
+      </div>
+    );
+  }
+}
+
+export default MyComponent;
+```
 
 - **클래스 컴포넌트의 생명주기 메서드:**
   - `render`: 컴포넌트가 렌더링될 때 호출되는 메서드
