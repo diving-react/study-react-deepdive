@@ -233,125 +233,28 @@ export default App;
 
 ## 2.3 클래스형 컴포넌트와 함수형 컴포넌트
 
+> p.143<br>
+> 0.14버전에서 함수 컴포넌트가 소개됐을 때는 stateless functional component,
+> 이른바 무상태 함수 컴폰너트라고 해서 별도의 상태 없이 단순히 어떠한 요소를 정적으로 렌더링 하는 것이 목적이덨다.
+
 - React 0.14 버전부터는 함수로 선언된 컴포넌트를 사용할 수 있게 되었습니다.
   - [무상태 함수형 컴포넌트(Stateless Function Components)](https://legacy.reactjs.org/blog/2015/10/07/react-v0.14.html#stateless-function-components)
   - 클래스 기반 컴포넌트와는 다르게 무상태 함수형 컴포넌트(Stateless Function Components)는 `state`나 `lifecycle` 메소드를 사용할 수 없고, 오직 `props`만을 받아서 UI를 렌더링하는 것을 반환합니다.
   - React 16.8 버전 이후부터는 Hooks API가 도입되어 함수형 컴포넌트에서도 상태 관리와 생명주기 기능을 사용할 수 있게 되었습니다.
 
-```jsx
-// p.144
-// 화살표 함수를 사용하는 함수 컴포넌트:
-var Aquarium = (props) => {
-  var fish = getFish(props.species);
-  return <Tank>{fish}</Tank>;
-};
-
-// 구조 분해 할당과 함께 사용하면 더 간결하게 표현할 수 있습니다:
-var Aquarium = ({ species }) => <Tank>{getFish(species)}</Tank>;
-
-// 사용 예: <Aquarium species="rainbowfish" />
-```
+> p.144<br>
+> 이때 당시 함수 컴포넌트는 클래스 컴포넌트에서 별다른 생명주기 메서드나 상태(this.state)가 필요없이 render만 하는 겨우에만 제한적으로 사용되었다.
+> 16.8버전에서 훅이 등장한 이후 함수 컴포넌트에서 상태나 생명주기 메서드 비슷한 작업을 흉내낼 수 있게 되자 상대적으로 보일러플레이트가 복잡한 클래스 컴포넌트 보다 함수 컴포넌트를 많이 쓰기 시작했다.  
 
 ### 2.3.1 클래스형 컴포넌트
 
 - React 16.8 이전에는 대부분의 컴포넌트가 클래스 형태로 작성되었습니다.
+  - (참고) [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+- 클래스 컴포넌트를 만들려면 `extends` 키워드를 사용하여 `React.Component`나 `React.PureComponent`를 확장해야 합니다.
+- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고, 
+- `React.PureComponent`는 성능 최적화를 위해 자동으로 `shouldComponentUpdate`를 구현한 클래스입니다.
 
-```jsx
-// p.144-145
-// 기본적인 클래스 컴포넌트 구조:
-import React from "react";
-
-class BasicClassComponent extends React.Component {
-  render() {
-    return <div>Hello, React!</div>;
-  }
-}
-```
-
-- 클래스형 컴포넌트를 만들 때 주로 사용하는 `props(속성)`, `state(상태)`, `method(메서드)`를 정의하는 방법은 다음과 같습니다.
-
-```tsx
-// p.145
-import React from "react";
-
-// 1. props 정의
-interface Props {
-  required?: boolean;
-  text: string;
-}
-
-// 2. state 정의
-interface State {
-  count: number;
-}
-
-// 3. 클래스형 컴포넌트 정의
-class ClassComponent extends React.Component<Props, State> {
-  // 4. 클래스형 컴포넌트의 메서드 정의
-  private constructor(props: Props) {
-    super(props);
-    this.state = {
-      count: 0,
-      isLimit: false,
-    };
-  }
-
-  // 5. render 내부에서 사용할 메서드 정의
-  private handleClick = () => {
-    const { count } = this.state;
-    this.setState({ count: count + 1 });
-  };
-
-  // 6. render 메서드틀 통해 렌더링할 JSX 정의
-  public render() {
-    const { required, text } = this.props;
-    const { count } = this.state;
-
-    return (
-      <div>
-        {required && <span>필수 항목입니다.</span>}
-        <p>{text}</p>
-        <p>count: {count}</p>
-      </div>
-    );
-  }
-}
-```
-
-```tsx
-// p. 148
-// 일반 함수로 선언된 메서드에서 this 바인딩을 사용
-class ClassComponent extends React.Component<Props, State> {
-  private constructor(props: Props) {
-    super(props);
-    this.state = {
-      count: 0,
-      isLimit: false,
-    };
-  }
-
-  // 일반 함수로 선언된 메서드에서 this 바인딩을 사용
-  private handleClick() {
-    const { count } = this.state;
-    this.setState({ count: count + 1 });
-  }
-
-  public render() {
-    const { required, text } = this.props;
-    const { count } = this.state;
-
-    return (
-      <div>
-        {required && <span>필수 항목입니다.</span>}
-        <p>{text}</p>
-        <p>count: {count}</p>
-        {/* 일반 함수로 선언된 메서드에서 this 바인딩을 사용 */}
-        <button onClick={this.handleClick}>증가</button>
-      </div>
-    );
-  }
-}
-```
+- **클래스형 컴포넌트를 만들 때 주로 사용하는 `props(속성)`, `state(상태)`, `method(메서드)`를 정의하는 방법:**
 
 - **생명주기 메서드가 실행되는 시점**: 마운트(mount), 업데이트(update), 언마운트(unmount)
   - **마운트**: 컴포넌트가 DOM에 추가되는 것을 의미
@@ -359,7 +262,6 @@ class ClassComponent extends React.Component<Props, State> {
   - **언마운트**: 컴포넌트가 DOM에서 제거되는 것을 의미
 
 - **클래스 컴포넌트의 생명주기 메서드:**
-
   - `render`: 컴포넌트가 렌더링될 때 호출되는 메서드
   - `componentDidMount`: 컴포넌트가 마운트된 직후(렌더링된 직후) 호출되는 메서드
   - `componentDidUpdate`: 컴포넌트가 업데이트된 직후 호출되는 메서드
@@ -371,7 +273,6 @@ class ClassComponent extends React.Component<Props, State> {
   - `componentDidCatch`: 컴포넌트 내부에서 에러가 발생했을 때 호출되는 메서드
 
 - **클래스 컴포넌트의 생명주기 메서드 호출 순서:**
-
   - `constructor` → `getDerivedStateFromProps` → `render` → `componentDidMount` → `componentDidUpdate` → `componentWillUnmount` → `getDerivedStateFromProps` → `shouldComponentUpdate` → `render` → `getSnapshotBeforeUpdate` → `componentDidUpdate`
 
 - **클래스 컴포넌트이 한계**:
