@@ -1,16 +1,11 @@
-// p.147
-import { Component } from "react";
+/**
+ * @description JSXElement
+ */
 
-class SampleComponent2 extends Component {
-    state = {
-        count: 1
-    }
+function Child({ attribute }) {
+  return <div>{attribute}</div>;
+}
 
-    render() {
-        const {
-            state : { count }
-        } = this
-
-        return <div>{ count }</div>
-    }
+export default function Parent() {
+  return <Child attribute={<div>내용</div>} />;
 }

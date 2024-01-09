@@ -1,8 +1,12 @@
-// p.144-145
-import React from 'react';
+/**
+ * @description JSXNamespacedName
+ */
 
-class SampleComponent extends React.Component {
-    render() {
-        return <h2>Sample Component</h2>
-    }
+function ValidComponnet() {
+  return <a:b></a:b>;
+}
+
+// Error: Invalid component element.
+function InvalidComponnet() {
+  return <a:b:c></a:b:c>;
 }

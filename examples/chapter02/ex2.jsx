@@ -1,7 +1,16 @@
-// p.144
-var Aquarium = (props) => {
-  var fish = getFish(props.species);
-  return <Tank>{fish}</Tank>;
-};
+/**
+ * @description JSXIdentifier
+ */
 
-var Aquarium = ({ species }) => <Tank>{getFish(species)}</Tank>;
+function ValidComponnet1() {
+  return <$></$>;
+}
+
+function ValidComponnet2() {
+  return <_></_>;
+}
+
+// Error: Invalid component element.
+function InvalidComponnet() {
+  return <1></1>;
+}

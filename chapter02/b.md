@@ -7,6 +7,11 @@
 - [02장: 리액트 핵심 요소 깊게 살펴보기](#02장-리액트-핵심-요소-깊게-살펴보기)
   - [2.1 JSX란?](#21-jsx란)
     - [2.1.1 JSX의 정의](#211-jsx의-정의)
+      - [JSXElement](#jsxelement)
+      - [JSXElementName](#jsxelementname)
+      - [JSXAttributes](#jsxattributes)
+    - [JSXChildren](#jsxchildren)
+      - [JSXStrings](#jsxstrings)
     - [2.1.2 JSX 예제](#212-jsx-예제)
     - [2.1.3 JSX는 어떻게 자바스크립트에서 변환될까?](#213-jsx는-어떻게-자바스크립트에서-변환될까)
     - [2.1.4 정리](#214-정리)
@@ -69,95 +74,87 @@ export default App;
 
 ### 2.1.1 JSX의 정의
 
-- JSX는 4가지 컴포넌트를 기반으로 구성: JSXElement, JSXAttributes, JSXChildren, JSXStrings
+#### JSXElement
 
-  - JSXElement
+JSXElement는 JSX 문법을 사용하여 생성한 React 컴포넌트를 나타냅니다. JSXElement는 HTML 태그와 유사한 구조를 가지며, React 컴포넌트를 생성하고 렌더링하는 데 사용됩니다.
 
-    - JSXElement는 JSX를 사용할 때 만나게 되는 기본적인 구성 요소
-    - JSXOpeningElement, JSXClosingElement, JSXSelfClosingElement, JSXFragment로 구성
-    - 상세:
-      - JSXOpeningElement: `<div>`와 같이 열린 태그
-      - JSXClosingElement: `</div>`와 같이 닫힌 태그
-      - JSXSelfClosingElement: `<img />`와 같이 self-closing 태그
-      - JSXFragment: `<>`와 같이 열린 태그와 `</>`와 같이 닫힌 태그로 구성된 빈 태그
-    - JSXElementName: JSXElement의 이름
+| 구성 요소             | 설명                                                                                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JSXOpeningElement     | JSXElement의 시작 부분을 나타냅니다. `<`로 시작하고 태그 이름과 속성을 포함합니다.                                                                 |
+| JSXClosingElement     | JSXElement의 끝 부분을 나타냅니다. `</`로 시작하고 태그 이름을 포함합니다.                                                                         |
+| JSXSelfClosingElement | 자체 닫히는 태그를 나타냅니다. `<`로 시작하고 태그 이름과 속성을 포함하며, 마지막에 `/`를 추가하여 자체 닫힘을 표시합니다.                         |
+| JSXFragment           | 빈 태그로 이루어진 구조를 나타냅니다. 여러 개의 컴포넌트를 묶어서 반환할 수 있습니다. `<></>` 형태로 작성되며, 자식 컴포넌트를 포함할 수 있습니다. |
 
-      - JSXIdentifier: JSXElementName을 구성하는 식별자
-      - JSXNamespacedName:
-        - JSXNamespacedName은 JSX에서 네임스페이스를 가진 컴포넌트를 참조할 때 사용
-        - `<Namespace:ComponentName`
-        - 여기서 Namespace는 컴포넌트가 속한 네임스페이스를 나타내고, ComponentName은 실제 컴포넌트의 이름을 나타냄
-        - JSXNamespacedName을 사용하면 네임스페이스가 지정된 컴포넌트를 JSX에서 사용할 수 있음
-      - JSXMemberExpression:
+| JSXElement                 | JSXElement의 구성 요소를 조합하여 JSXElement를 생성할 수 있습니다.        |
+| -------------------------- | ------------------------------------------------------------------------- |
+| `<태그이름 />`             | JSXSelfClosingElement를 사용하여 JSXElement를 생성합니다.                 |
+| `<태그이름>...</태그이름>` | JSXOpeningElement와 JSXClosingElement를 사용하여 JSXElement를 생성합니다. |
+| `<></>`                    | JSXFragment를 사용하여 JSXElement를 생성합니다.                           |
 
-        - 네임스페이스와는 다른 개념으로, 특정 컴포넌트 내에 중첩된 컴포넌트에 접근할 때 사용
-        - `<ComponentName.SubComponentName />`: ComponentName은 부모 컴포넌트를 나타내고, SubComponentName은 해당 부모 컴포넌트 내의 서브 컴포넌트를 나타냄
-        - React 컴포넌트의 정적 속성(static properties)이나 메서드로 구현 가능
+#### JSXElementName
 
-          ```jsx
-          class Form extends React.Component {
-            //...
-          }
+JSXElementName은 JSXElement의 이름을 나타냅니다. JSXElementName은 JSX 문법에서 사용되는 요소의 이름을 정의합니다.
 
-          Form.Input = function Input(props) {
-            return <input {...props} />;
-          };
+| 구성 요소           | 설명                                                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| JSXIdentifier       | JSXElementName의 식별자를 나타냅니다. 식별자는 소문자로 시작하며, 컴포넌트의 이름으로 사용됩니다.                |
+| JSXNamespacedName   | JSXElementName의 네임스페이스 이름을 나타냅니다. 네임스페이스 이름은 콜론으로 구분된 접두사를 포함한 이름입니다. |
+| JSXMemberExpression | JSXElementName의 멤버 표현식을 나타냅니다. 멤버 표현식은 점으로 구분된 속성과 객체의 조합으로 구성됩니다.        |
 
-          Form.Button = function Button(props) {
-            return <button {...props} />;
-          };
+| JSXElementName          | JSXElementName의 구성 요소를 조합하여 JSXElementName을 생성할 수 있습니다. |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `<식별자>`              | JSXIdentifier를 사용하여 JSXElementName을 생성합니다.                      |
+| `<네임스페이스:식별자>` | JSXNamespacedName을 사용하여 JSXElementName을 생성합니다.                  |
+| `<식별자.식별자>`       | JSXMemberExpression을 사용하여 JSXElementName을 생성합니다.                |
 
-          // 사용 예
-          function App() {
-            return (
-              <Form>
-                <Form.Input type="text" placeholder="이름을 입력하세요" />
-                <Form.Button type="submit">확인</Form.Button>
-              </Form>
-            );
-          }
-          ```
+#### JSXAttributes
 
-  - JSXAttributes: JSXElement의 속성
-    - JSXAttribute: JSXAttributes를 구성하는 속성
-    - JSXAttributeName: JSXAttribute의 이름
-    - JSXAttributeValue: JSXAttribute의 값
-    - JSXSpreadAttribute: JSXAttributes를 구성하는 스프레드 속성
-  - JSXChildren: JSXElement의 자식 요소
-    - JSXChild: JSXChildren을 구성하는 자식 요소로 0개 이상의 JSXText, JSXElement, JSXFragment, JSXChildExpression으로 구성
-      - JSXText: JSX에서의 텍스트 노드
-      - JSXElement: JSX의 기본 구성 요소로, HTML 태그 또는 다른 컴포넌트를 나타냄
-      - JSXFragment: 여러 자식을 그룹화하지만 추가적인 DOM 엘리먼트를 추가하지 않는 컨테이너 역할
-      - JSXChildExpression: 중괄호 {}로 감싼 JavaScript 표현식
-        ```jsx
-        function App() {
-          const name = "B";
-          return (
-            <>
-              <h1>제목</h1>
-              <p>이것은 단락입니다.</p>
-              {true && <span>이 조건이 참일 때 보여집니다.</span>}
-            </>
-          );
-        }
-        // <h1>과 <p>는 JSXElement이며, "제목"과 "이것은 단락입니다."는 JSXText입니다.
-        // {true && <span>...</span>} 부분은 JSXExpression에 해당하며, 전체 코드는 JSXFragment로 감싸져 있습니다.
-        ```
-  - JSXStrings: JSXElement의 문자열
+JSXAttributes는 JSXElement의 속성을 나타냅니다. JSXAttributes는 HTML 태그의 속성과 유사한 방식으로 작성되며, 컴포넌트에 추가적인 정보를 전달하는 데 사용됩니다.
 
-- **JSX 컴포넌트의 명명규칙**:
-  - **파스칼 케이스(PascalCase) 사용**: `MyComponent`와 같이 각 단어의 첫 글자를 대문자로 표기(일반 HTML 태그와 구분하기 위함)
-  - **명확한 컴포넌트 이름 사용**: 데이터 테이블을 표시하는 컴포넌트를 `DataTable`로 정의하는 것과 같이 컴포넌트의 역할을 명확히 알 수 있도록 이름을 지정
-  - **짧지만 의미 있는 이름**: 너무 긴 이름은 코드를 읽기 어렵게 만들 수 있으므로, 짧지만 의미 있는 이름을 사용하는 것이 좋음
-    - 예: `Post` 컴포넌트는 `PostItem`보다는 `Post`로, `PostList`보다는 `Posts`로 정의
-  - **특수문자 사용 금지**: `_`나 `-`와 같은 특수문자는 사용하지 않는 것이 좋음
-  - **예악어 사용 금지**: `class`나 `for`와 같은 예약어는 사용하지 않도록 함
+| 구성 요소          | 설명                                                 |
+| ------------------ | ---------------------------------------------------- |
+| JSXAttribute       | JSXAttributes를 구성하는 속성을 나타냅니다.          |
+| JSXAttributeName   | JSXAttribute의 이름을 나타냅니다.                    |
+| JSXAttributeValue  | JSXAttribute의 값으로 사용되는 표현식을 나타냅니다.  |
+| JSXSpreadAttribute | JSXAttributes를 구성하는 스프레드 속성을 나타냅니다. |
+
+| JSXAttribute                           | JSXAttributes를 구성하는 속성을 나타냅니다.                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------- |
+| `<태그이름 속성이름={값} />`           | 속성 이름과 값을 포함하는 JSXAttribute입니다.                                         |
+| `<태그이름 {...객체} />`               | 객체를 전개하여 JSXAttribute를 생성하는 JSXSpreadAttribute입니다.                     |
+| `<태그이름 {...객체} 속성이름={값} />` | 객체를 전개하여 JSXAttribute를 생성하고, 추가적인 속성을 포함하는 JSXAttribute입니다. |
+
+### JSXChildren
+
+JSXChild는 JSXChildren을 구성하는 자식 요소를 나타냅니다. JSXChild는 JSXText, JSXElement, JSXFragment, JSXChildExpression 중 하나일 수 있으며, 여러 개의 자식 요소가 포함될 수 있습니다.
+
+| 구성 요소          | 설명                                                                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| JSXText            | JSX에서의 텍스트 노드를 나타냅니다. JSXElement 안에 직접 작성된 텍스트 내용을 나타내며, HTML 태그가 아닌 일반 텍스트로 처리됩니다.                     |
+| JSXElement         | JSX의 기본 구성 요소로, HTML 태그나 다른 컴포넌트를 나타냅니다. JSXElement는 JSXChildren을 가질 수 있으며, 중첩된 구조로 작성할 수 있습니다.           |
+| JSXFragment        | 여러 자식 요소를 그룹화하지만 추가적인 DOM 엘리먼트를 추가하지 않는 컨테이너 역할을 합니다. `<></>` 형태로 작성되며, JSXChildren을 포함할 수 있습니다. |
+| JSXChildExpression | 중괄호 `{}`로 감싼 JavaScript 표현식을 나타냅니다. JSXElement 안에서 동적인 값을 표현하기 위해 사용됩니다.                                             |
+
+| JSXChildren | JSXChildren의 구성 요소를 조합하여 JSXChildren을 생성할 수 있습니다. |
+| ----------- | -------------------------------------------------------------------- |
+| `<텍스트>`  | JSXText를 사용하여 JSXChildren을 생성합니다.                         |
+| `<></>`     | JSXFragment를 사용하여 JSXChildren을 생성합니다.                     |
+| `{표현식}`  | JSXChildExpression을 사용하여 JSXChildren을 생성합니다.              |
+
+#### JSXStrings
+
+JSXStrings은 JSXElement에서 사용되는 문자열 리터럴을 나타냅니다. JSXStrings은 JSX 속성 값이나 텍스트 노드로 사용됩니다.
+
+| 구성 요소     | 설명                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
+| 일반 문자열   | 일반적인 문자열 리터럴을 나타냅니다. 작은 따옴표(') 또는 큰 따옴표(")로 감싸져 있습니다.                |
+| 템플릿 리터럴 | 백틱(`)으로 감싸진 템플릿 리터럴을 나타냅니다. 템플릿 리터럴 안에는 변수나 표현식을 삽입할 수 있습니다. |
 
 ### 2.1.2 JSX 예제
 
 ### 2.1.3 JSX는 어떻게 자바스크립트에서 변환될까?
 
-- @babel/plugin-transform-react-jsx 플러그인을 사용하면 JSX를 일반 자바스크립트로 변환할 수 있음
+- [@babel/plugin-transform-react-jsx 플러그인](https://babeljs.io/docs/babel-plugin-transform-react-jsx)을 사용하면 JSX를 일반 자바스크립트로 변환할 수 있음
 
 ### 2.1.4 정리
 
@@ -168,9 +165,11 @@ export default App;
 ### 2.2.1 DOM과 브라우저 렌더링 과정
 
 #### DOM(Document Object Model)
+
 HTML 문서의 구조를 표현하는 트리 구조 형태의 데이터 모델로, 브라우저가 HTML 문서를 파싱한 결과물
 
 #### 브라우저가 웹 사이트 접근 요청을 받고 화면을 그리는 과정
+
 1. **URL 입력 또는 링크 클릭:** 사용자가 웹 사이트의 URL을 입력하거나 링크를 클릭하여 웹 사이트에 접근 요청을 보냅니다.
 2. **DNS 조회:** 브라우저는 해당 URL에 대한 DNS 조회를 수행하여 서버의 IP 주소를 가져옵니다.
 3. **HTTP 요청:** 브라우저는 서버에 HTTP 요청을 보내고, 요청 메서드(GET, POST 등)와 함께 요청 헤더와 데이터를 포함시킵니다.
@@ -181,6 +180,7 @@ HTML 문서의 구조를 표현하는 트리 구조 형태의 데이터 모델�
 8. **사용자 상호작용 및 JavaScript 실행:** 내용이 그려진 후, 브라우저는 사용자의 입력을 대기하거나 애니메이션 및 이벤트 처리를 위해 JavaScript 코드를 실행합니다.
 
 #### CRP(Critical Rendering Path):
+
 ```mermaid
 graph LR
 A[사용자가 URL 입력] --> B[DNS 조회]
@@ -196,7 +196,6 @@ I --> J[렌더 트리 계산]
 J --> K[렌더 트리 페인팅]
 K --> L[화면에 페인팅된 요소 보여줌]
 ```
-
 
 ### 2.2.2 가상 DOM의 탄생 배경
 
@@ -223,43 +222,44 @@ K --> L[화면에 페인팅된 요소 보여줌]
 
 > p.144<br>
 > 이때 당시 함수 컴포넌트는 클래스 컴포넌트에서 별다른 생명주기 메서드나 상태(this.state)가 필요없이 render만 하는 겨우에만 제한적으로 사용되었다.
-> 16.8버전에서 훅이 등장한 이후 함수 컴포넌트에서 상태나 생명주기 메서드 비슷한 작업을 흉내낼 수 있게 되자 상대적으로 보일러플레이트가 복잡한 클래스 컴포넌트 보다 함수 컴포넌트를 많이 쓰기 시작했다.  
+> 16.8버전에서 훅이 등장한 이후 함수 컴포넌트에서 상태나 생명주기 메서드 비슷한 작업을 흉내낼 수 있게 되자 상대적으로 보일러플레이트가 복잡한 클래스 컴포넌트 보다 함수 컴포넌트를 많이 쓰기 시작했다.
 
 ### 2.3.1 클래스형 컴포넌트
+
 - React 16.8 이전에는 대부분의 컴포넌트가 클래스 형태로 작성되었습니다.
 - 클래스 컴포넌트를 만들려면 `extends` 키워드를 사용하여 `React.Component`나 `React.PureComponent`를 확장해야 합니다.
-- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고, 
+- `React.Component`는 기본 컴포넌트 클래스로 상태(state)와 라이프사이클 메서드를 사용할 수 있게 해주고,
 - `React.PureComponent`는 성능 최적화를 위해 자동으로 `shouldComponentUpdate`를 구현한 클래스입니다.
 - 클래스형 컴포넌트를 만들 때 주로 `props(속성)`, `state(상태)`, `method(메서드)`를 사용하여 정의
 
 ```jsx
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class MyComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      count: 0
+      count: 0,
     };
   }
 
   componentDidMount() {
-    console.log('Component mounted');
+    console.log("Component mounted");
   }
 
   componentDidUpdate() {
-    console.log('Component updated');
+    console.log("Component updated");
   }
 
   componentWillUnmount() {
-    console.log('Component will unmount');
+    console.log("Component will unmount");
   }
 
   handleClick = () => {
-    this.setState(prevState => ({
-      count: prevState.count + 1
+    this.setState((prevState) => ({
+      count: prevState.count + 1,
     }));
-  }
+  };
 
   render() {
     return (
@@ -275,22 +275,22 @@ export default MyComponent;
 ```
 
 #### 생명주기(life cycle) 메서드가 실행되는 시점
-  - 마운트(mount): 컴포넌트가 DOM에 추가되는 것을 의미합니다. 이때 `constructor`, `render`, `componentDidMount` 메서드가 실행됩니다.
-  - 업데이트(update): 컴포넌트의 상태가 변경되는 것을 의미합니다. 이때 `render`, `componentDidUpdate`, `shouldComponentUpdate`, `getSnapshotBeforeUpdate` 메서드가 실행됩니다.
-  - method(메서드): 컴포넌트가 DOM에서 제거되는 것을 의미합니다. 이때 `componentWillUnmount` 메서드가 실행됩니다.
+
+- 마운트(mount): 컴포넌트가 DOM에 추가되는 것을 의미합니다. 이때 `constructor`, `render`, `componentDidMount` 메서드가 실행됩니다.
+- 업데이트(update): 컴포넌트의 상태가 변경되는 것을 의미합니다. 이때 `render`, `componentDidUpdate`, `shouldComponentUpdate`, `getSnapshotBeforeUpdate` 메서드가 실행됩니다.
+- method(메서드): 컴포넌트가 DOM에서 제거되는 것을 의미합니다. 이때 `componentWillUnmount` 메서드가 실행됩니다.
 
 각 생명주기 메서드는 특정 시점에 자동으로 호출되며, 해당 시점에 원하는 동작을 구현할 수 있습니다. 이를 활용하여 컴포넌트의 초기화, 데이터 로딩, 상태 업데이트 등을 관리할 수 있습니다.
 
-| 생명주기 메서드   | 실행 시점       | 설명                                                         |
-| ---------------- | --------------- | ------------------------------------------------------------ |
-| `constructor`    | 마운트          | 컴포넌트의 인스턴스가 생성될 때 호출되는 메서드입니다.        |
-| `render`         | 마운트, 업데이트 | 컴포넌트의 UI를 렌더링하는 메서드입니다.                      |
-| `componentDidMount` | 마운트        | 컴포넌트가 DOM에 추가된 후 호출되는 메서드입니다.             |
-| `componentDidUpdate` | 업데이트     | 컴포넌트의 업데이트가 완료된 후 호출되는 메서드입니다.         |
-| `componentWillUnmount` | 언마운트   | 컴포넌트가 DOM에서 제거되기 전에 호출되는 메서드입니다.        |
-| `shouldComponentUpdate` | 업데이트  | 컴포넌트의 업데이트 여부를 결정하는 메서드입니다.             |
-| `getSnapshotBeforeUpdate` | 업데이트 | 실제 DOM에 변화가 반영되기 직전에 호출되는 메서드입니다.       |
-
+| 생명주기 메서드           | 실행 시점        | 설명                                                     |
+| ------------------------- | ---------------- | -------------------------------------------------------- |
+| `constructor`             | 마운트           | 컴포넌트의 인스턴스가 생성될 때 호출되는 메서드입니다.   |
+| `render`                  | 마운트, 업데이트 | 컴포넌트의 UI를 렌더링하는 메서드입니다.                 |
+| `componentDidMount`       | 마운트           | 컴포넌트가 DOM에 추가된 후 호출되는 메서드입니다.        |
+| `componentDidUpdate`      | 업데이트         | 컴포넌트의 업데이트가 완료된 후 호출되는 메서드입니다.   |
+| `componentWillUnmount`    | 언마운트         | 컴포넌트가 DOM에서 제거되기 전에 호출되는 메서드입니다.  |
+| `shouldComponentUpdate`   | 업데이트         | 컴포넌트의 업데이트 여부를 결정하는 메서드입니다.        |
+| `getSnapshotBeforeUpdate` | 업데이트         | 실제 DOM에 변화가 반영되기 직전에 호출되는 메서드입니다. |
 
 #### 클래스 컴포넌트의 생명주기 메서드 호출 순서
 
@@ -310,7 +310,6 @@ G --> H[componentWillUnmount]
 ### 2.3.2 함수형 컴포넌트
 
 - 함수형 컴포넌트는 클래스형 컴포넌트와 달리 `state`나 `lifecycle` 메서드를 사용할 수 없습니다. 그러나 React 16.8 이후부터는 Hooks API를 사용하여 함수형 컴포넌트에서도 상태 관리와 생명주기 기능을 사용할 수 있게 되었습니다.
-
 
 ### 2.3.3 함수형 컴포넌트 vs. 클래스형 컴포넌트
 
