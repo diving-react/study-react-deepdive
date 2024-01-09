@@ -106,23 +106,6 @@ JSXElementName은 JSXElement의 이름을 나타냅니다. JSXElementName은 JSX
 
 JSXAttributes는 JSXElement의 속성을 나타냅니다. JSXAttributes는 HTML 태그의 속성과 유사한 방식으로 작성되며, 컴포넌트에 추가적인 정보를 전달하는 데 사용됩니다.
 
-| 구성 요소          | 설명                                                 |
-| ------------------ | ---------------------------------------------------- |
-| JSXAttribute       | JSXAttributes를 구성하는 속성을 나타냅니다.          |
-| JSXAttributeName   | JSXAttribute의 이름을 나타냅니다.                    |
-| JSXAttributeValue  | JSXAttribute의 값으로 사용되는 표현식을 나타냅니다.  |
-| JSXSpreadAttribute | JSXAttributes를 구성하는 스프레드 속성을 나타냅니다. |
-
-| JSXAttribute                           | JSXAttributes를 구성하는 속성을 나타냅니다.                                           |
-| -------------------------------------- | ------------------------------------------------------------------------------------- |
-| `<태그이름 속성이름={값} />`           | 속성 이름과 값을 포함하는 JSXAttribute입니다.                                         |
-| `<태그이름 {...객체} />`               | 객체를 전개하여 JSXAttribute를 생성하는 JSXSpreadAttribute입니다.                     |
-| `<태그이름 {...객체} 속성이름={값} />` | 객체를 전개하여 JSXAttribute를 생성하고, 추가적인 속성을 포함하는 JSXAttribute입니다. |
-
-### JSXChildren
-
-JSXChild는 JSXChildren을 구성하는 자식 요소를 나타냅니다. JSXChild는 JSXText, JSXElement, JSXFragment, JSXChildExpression 중 하나일 수 있으며, 여러 개의 자식 요소가 포함될 수 있습니다.
-
 | 구성 요소          | 설명                                                                              | 예시                              |
 | ------------------ | --------------------------------------------------------------------------------- | --------------------------------- |
 | JSXAttribute       | JSX 요소에 추가되는 속성을 나타냅니다.                                            | `type="text"`                     |
@@ -135,6 +118,23 @@ JSXChild는 JSXChildren을 구성하는 자식 요소를 나타냅니다. JSXChi
 | `<input type="text" />`               | `type`이라는 이름의 JSXAttribute를 사용하여 속성을 정의합니다.                               |
 | `<div {...props} />`                  | `props` 객체에 있는 모든 속성을 `<div>` 요소에 스프레드 속성으로 전개합니다.                 |
 | `<button {...props} type="button" />` | `props` 객체를 스프레드 속성으로 전개하고, `type` 속성을 추가하여 JSXAttribute를 조합합니다. |
+
+### JSXChildren
+
+JSXChild는 JSXChildren을 구성하는 자식 요소를 나타냅니다. JSXChild는 JSXText, JSXElement, JSXFragment, JSXChildExpression 중 하나일 수 있으며, 여러 개의 자식 요소가 포함될 수 있습니다.
+
+| 구성 요소          | 설명                                                                                                   | 예시                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| JSXText            | JSXElement 안에 직접 작성된 텍스트 내용을 나타내며, HTML 태그가 아닌 일반 텍스트로 처리됩니다.         | "Hello, world!"                    |
+| JSXElement         | HTML 태그나 다른 컴포넌트를 나타내며, 중첩된 구조로 작성할 수 있고 JSXChildren을 가질 수 있습니다.     | `<div>Hello, world!</div>`         |
+| JSXFragment        | 여러 자식 요소를 그룹화하지만 추가적인 DOM 엘리먼트를 추가하지 않는 컨테이너 역할을 합니다.            | `<><ChildA /><ChildB /></>`        |
+| JSXChildExpression | 중괄호 `{}`로 감싼 JavaScript 표현식을 나타냅니다. JSXElement 안에서 동적인 값을 표현할 때 사용됩니다. | `{true ? <ChildA /> : <ChildB />}` |
+
+| JSXChildren | 구성 요소를 조합하여 JSXChildren을 생성할 수 있습니다.                                       |
+| ----------- | -------------------------------------------------------------------------------------------- |
+| `<텍스트>`  | JSXText를 사용하여 간단한 텍스트 노드를 자식 요소로 생성합니다.                              |
+| `<></>`     | JSXFragment를 사용하여 여러 자식 요소를 그룹화하지만, 추가 DOM 엘리먼트 없이 생성합니다.     |
+| `{표현식}`  | JSXChildExpression을 사용하여 JavaScript 표현식을 계산하여 그 결과를 자식 요소로 생성합니다. |
 
 #### JSXStrings
 
