@@ -28,21 +28,24 @@
 
 ## 3.1 리액트의 모든 훅 파헤치기
 
-| 훅 이름          | 타입        | 정의                                                    | 예제                                                  |
-|-----------------|-------------|---------------------------------------------------------|-----------------------------------------------------------|
-| useState        | 상태 훅     | 상태 값을 관리하고 업데이트하는 데 사용                   | `const [count, setCount] = useState(0);`                   |
-| useEffect       | 효과 훅     | 컴포넌트의 생명주기에 따른 작업을 수행하는 데 사용         | `useEffect(() => { console.log('Component mounted'); }, []);` |
-| useMemo         | 메모이제이션 훅 | 계산 결과를 기억하고 재사용하는 데 사용                    | `const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);` |
-| useCallback    | 콜백 훅     | 콜백 함수를 기억하고 재사용하는 데 사용                    | `const memoizedCallback = useCallback(() => { /* callback logic */ }, [dependency]);` |
-| useRef          | 참조 훅     | 컴포넌트 내에서 변경 가능한 값을 저장하는 데 사용           | `const refContainer = useRef(initialValue);`               |
-| useContext      | 컨텍스트 훅 | React의 컨텍스트를 사용하는 데 사용                         | `const value = useContext(MyContext);`                     |
-| useReducer      | 리듀서 훅   | 상태와 액션을 받아 새로운 상태를 반환하는 리듀서 함수와 함께 사용 | `const [state, dispatch] = useReducer(reducer, initialState);` |
-| useImperativeHandle | 인퍼런스 훅 | 부모 컴포넌트에서 자식 컴포넌트의 인스턴스를 조작하는 데 사용 | `useImperativeHandle(ref, () => ({ method() { /* method logic */ } }));` |
-| useLayoutEffect | 레이아웃 훅 | DOM 업데이트 이후 동기적으로 작업을 수행하는 데 사용        | `useLayoutEffect(() => { /* layout effect logic */ }, []);` |
-| useDebugValue   | 디버그 훅   | 커스텀 훅에서 디버깅 정보를 제공하는 데 사용                | `useDebugValue(value);`                                    |
+| 훅 이름          |  정의                                                    | 예제                                                  |
+|-----------------|---------------------------------------------------------|-----------------------------------------------------------|
+| useState        | 상태 값을 관리하고 업데이트하는 데 사용                   | `const [count, setCount] = useState(0);`                   |
+| useEffect       | 컴포넌트의 생명주기에 따른 작업을 수행하는 데 사용         | `useEffect(() => { console.log('Component mounted'); }, []);` |
+| useMemo         | 계산 결과를 기억하고 재사용하는 데 사용                    | `const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);` |
+| useCallback    | 콜백 함수를 기억하고 재사용하는 데 사용                    | `const memoizedCallback = useCallback(() => { /* callback logic */ }, [dependency])` |
+| useRef          | 컴포넌트 내에서 변경 가능한 값을 저장하는 데 사용           | `const refContainer = useRef(initialValue);`               |
+| useContext      | React의 컨텍스트를 사용하는 데 사용                         | `const value = useContext(MyContext);`                     |
+| useReducer      | 상태와 액션을 받아 새로운 상태를 반환하는 리듀서 함수와 함께 사용 | `const [state, dispatch] = useReducer(reducer, initialState);` |
+| useImperativeHandle | 부모 컴포넌트에서 자식 컴포넌트의 인스턴스를 조작하는 데 사용 | `useImperativeHandle(ref, () => ({ method() { /* method logic */ } }));` |
+| useLayoutEffect | DOM 업데이트 이후 동기적으로 작업을 수행하는 데 사용        | `useLayoutEffect(() => { /* layout effect logic */ }, []);` |
+| useDebugValue   | 커스텀 훅에서 디버깅 정보를 제공하는 데 사용                | `useDebugValue(value);`                                    |
 
 
 ### 3.1.1 `useState`
+
+- 리액트에서 렌더링은 함수 컴포넌트의 return과 클래스 컴포넌트의 render함수를 실행한 다음, 이 실행 결과를 이전의 리액트 트리와 비교해 리렌더링이 필요한 부분만 업데이트해 이뤄진다.
+- 리액트의 렌더링은 함수 컴포넌트에서 반환한 결과물인 return의 값을 빅해 실행되기 때문에 매번 렌더링이 발생할 때마 함수는 다시 새롭게 실행되고, 새롭게 실행된 함수에서 state는 매번 hello로 초기화 되므로 아무리 state를  변경해도 다시 hello로 초기화도니다.
 
 ```jsx
 /** 
@@ -103,6 +106,17 @@ dispatch({type: 'UPDATE_STATE', payload: updatedValues});
 ```
 
 ### 3.1.2 `useEffect`
+- `useEffect` 훅은 두 개의 매개변수를 받습니다. 첫 번째 매개변수는 작업을 담은 함수이고, 두 번째 매개변수는 `의존성 배열(dependency array)`입니다. 이 함수는 컴포넌트가 렌더링될 때마다 실행되며, 의존성 배열에 지정된 값이 변경될 때만 실행됩니다. 의존성 배열을 빈 배열로 설정하면 컴포넌트가 처음 렌더링될 때만 실행됩니다.
+- `Clean-up` 함수
+- `의존성 배열(dependency array)`
+- `useEffect`의 구현
+- `useEffect`를 사용할 때 주의할 점
+  1. `eslint-disable-line react-hooks/exhaustive-deps` 주석은 최대한 자제하라
+  2. `useEffect`의 첫번째 인수에 함수명을 부여하라
+  3. 거대한 `useEffect`를 만들지마라
+  4. 불필요한 외부 함수를 만들지마라
+    - 왜 `useEffect`의 콜백 인수로 비동기 함수를 바로 넣을 수 있을까?
+
 ### 3.1.3 `useMemo`
 ### 3.1.4 `useCallback`
 ### 3.1.5 `useRef`
@@ -122,10 +136,14 @@ dispatch({type: 'UPDATE_STATE', payload: updatedValues});
 ### 3.2.3 사용자 정의 훅과 고차 컴포넌트 중 무엇을 써야 할까?
 ### 3.2.4 정리
 
+<br>
+
 ## References
 - [리액트 공식문서, Introducing Hooks](https://legacy.reactjs.org/docs/hooks-intro.html)
 - [리액트 공식문서, Hooks API Reference](https://legacy.reactjs.org/docs/hooks-reference.html)
 - [useState](https://react.dev/reference/react/useState)
+
+<br>
 
 ## Articles
 - [DEV, Why useeffect is running twice in react](https://dev.to/jahid6597/why-useeffect-is-running-twice-in-react-18c6#:~:text=In%20React%2C%20the%20useEffect%20hook,as%20%22dependencies%22)%20change)
