@@ -392,3 +392,5 @@ export default MyComponent;
 - [Why use custom Hooks?](https://react.dev/learn/reusing-logic-with-custom-hooks#:~:text=Custom%20Hooks%20let%20you%20share%20stateful%20logic%2C%20not%20state%20itself&text=They%20happened%20to%20have%20the,whether%20the%20network%20is%20on).&text=There's%20some%20repetitive%20logic%20for,state%20(%20firstName%20and%20lastName%20))
 - [React.memo 현명하게 사용하기](https://ui.toast.com/weekly-pick/ko_20190731#reactmemo-%ED%98%84%EB%AA%85%ED%95%98%EA%B2%8C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0)
 - [A guide to memoization using React.memo](https://github.com/RicardoMorato/React.memo)
+- [Higher-Order Components In React](https://www.smashingmagazine.com/2020/06/higher-order-components-react/)
+- [HOC Pattern](https://www.patterns.dev/react/hoc-pattern/)
