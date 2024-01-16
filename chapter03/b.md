@@ -109,27 +109,38 @@ const [현재 상태, value를 업데이트하는 함수] = useState(초기값);
     rest 변수는 배열의 나머지 부분을 담게 되며, 이 경우 [2, 3]이 됩니다.
     </details>
 
-- 리액트의 함수형 컴포넌트는 매 렌더링마다 새로운 함수 호출로 간주되기 때문에, 컴포넌트의 로컬 변수들은 호출이 끝날 때 사라지고 다음 렌더링 때 새로 생성됩니다. 하지만 `useState`와 같은 훅을 사용하면, 리액트가 내부적으로 상태를 관리하여 컴포넌트가 다시 실행되어도 이전 상태 값을 유지할 수 있게 합니다. 이 상태 관리는 클로저와 밀접한 관련이 있습니다. 클로저는 함수가 선언될 때의 렉시컬 환경을 기억하는 함수를 말합니다. React에서 클로저는 주로 이벤트 핸들러나 비동기 작업에서 이전 상태 값을 참조할 때 중요한 역할을 합니다.
+- 리액트의 함수형 컴포넌트는 매 렌더링마다 새로운 함수 호출로 간주되기 때문에, 컴포넌트의 로컬 변수들은 호출이 끝날 때 사라지고 다음 렌더링 때 새로 생성됩니다. 하지만 `useState`와 같은 훅을 사용하면, 리액트가 내부적으로 상태를 관리하여 컴포넌트가 다시 실행되어도 이전 상태 값을 유지할 수 있게 합니다.
+  - 이 상태 관리는 클로저와 밀접한 관련이 있습니다. 클로저는 함수가 선언될 때의 렉시컬 환경을 기억하는 함수를 말합니다. React에서 클로저는 주로 이벤트 핸들러나 비동기 작업에서 이전 상태 값을 참조할 때 중요한 역할을 합니다.
 
 ```jsx
 import React, { useState } from "react";
 
 function Counter() {
-  // useState를 사용하여 'count'라는 상태 변수와 이를 업데이트하는 'setCount' 함수를 선언합니다.
+  // 'count' 상태와 이 상태를 업데이트하는 'setCount' 함수를 초기화합니다.
+  // 초기값으로 0을 설정합니다.
   const [count, setCount] = useState(0);
 
-  // 클릭 이벤트 핸들러에서 클로저를 사용합니다.
-  // 이 함수는 'count' 상태를 참조하며, 클릭 시에 'setCount'를 호출하여 상태를 업데이트합니다.
+  // 카운트를 증가시키는 핸들러 함수입니다.
+  // 'setCount' 함수에 현재 상태를 기반으로 다음 상태를 결정하는 함수를 전달합니다.
+  // 이는 상태 업데이트가 비동기적으로 일어나기 때문에 중요합니다.
   const handleIncrement = () => {
-    setCount((prevCount) => prevCount + 1); // 클로저를 통해 이전 상태 값을 참조합니다.
+    setCount((prevCount) => prevCount + 1); // 이전 상태값을 사용하여 다음 상태값을 계산합니다.
   };
 
-  // 컴포넌트가 렌더링될 때마다 'handleIncrement' 함수는 새로 생성되지만,
-  // 'setCount' 함수는 항상 최신 'count' 상태에 접근할 수 있습니다.
+  // 카운트를 감소시키는 핸들러 함수입니다.
+  // 여기서도 'setCount'에 함수를 전달하여 상태 업데이트를 안전하게 수행합니다.
+  const handleDecrement = () => {
+    setCount((prevCount) => prevCount - 1); // 이전 상태값을 사용하여 다음 상태값을 계산합니다.
+  };
+
+  // 'handleIncrement'와 'handleDecrement' 함수는 컴포넌트가 렌더링될 때마다 새로 생성됩니다.
+  // 그러나 이 함수들은 'setCount'를 통해 상태를 업데이트할 때 현재의 'count' 상태 값을 직접 참조하지 않습니다.
+  // 대신, 'setCount'에 전달된 이전 상태값(prevCount)을 기반으로 새로운 상태값을 계산합니다.
   return (
     <div>
       <p>현재 카운트: {count}</p>
       <button onClick={handleIncrement}>증가</button>
+      <button onClick={handleDecrement}>감소</button>
     </div>
   );
 }
@@ -137,16 +148,44 @@ function Counter() {
 export default Counter;
 ```
 
-> 위 코드에서 `handleIncrement` 함수는 `setCount` 함수를 호출할 때마다 `count` 상태를 업데이트합니다. 이 때 `handleIncrement` 내부에서 참조하는 `count` 값은 클로저를 통해 함수가 선언될 당시의 `count` 값으로 고정됩니다.
-> `useEffect`의 의존성 배열이 빈 배열인 경우, `handleIncrement`는 컴포넌트가 처음 마운트될 때의 `count` 값인 0을 '기억'합니다. 따라서 `setInterval`에 의해 호출되는 `handleIncrement`는 항상 `count`를 `1`로만 설정하게 됩니다. 이 문제를 해결하기 위해서는, `count`에 대한 의존성을 `useEffect`의 배열에 추가하거나, `Setter` 함수에 함수를 전달하여 이전 상태 값을 기반으로 새 상태 값을 설정하도록 해야 합니다.
+> 위 코드는 `useState`훅을 사용하여 간단한 카운터 컴포넌트를 구현한 것입니다. `useState`로부터 얻은 `setCount` 함수를 사용할 때, 현재 상태값을 직접 사용하는 대신에 이전 상태값에 기반하여 업데이트를 수행하는 콜백 함수를 전달함으로써, 상태 업데이트가 비동기적으로 일어나더라도 안정적으로 현재 상태값을 계산할 수 있습니다. 이 방식은 특히 여러 상태 업데이트가 동시에 발생할 때 유용하며, 잠재적인 동시성 문제를 방지할 수 있습니다.
 >
-> ```jsx
-> function handleIncrement() {
->   setCount((prevCount) => prevCount + 1);
-> }
-> ```
+> **잠재적인 동시성 문제**
 >
-> 이렇게 하면 `setCount는` 현재의 `count` 값에 접근하는 대신, 업데이트 시점의 가장 최신 상태 값을 사용하여 업데이트를 수행하게 됩니다.
+> - **비동기적 상태 업데이트**: React가 상태 업데이트를 비동기적으로 처리할 수 있기 때문에, count 값이 예상과 다르게 변경될 수 있습니다. 이전 상태를 기반으로 하는 함수를 전달함으로써, 항상 올바른 참조값을 기반으로 상태를 업데이트할 수 있습니다.
+> - **배치 처리된 상태 업데이트**: React는 성능 최적화를 위해 여러 setState 호출을 배치 처리할 수 있습니다. 이 경우, 여러 업데이트가 하나의 렌더링 사이클로 합쳐질 수 있으며, 각 업데이트는 독립적인 count 값을 가지지 않고 마지막 상태값을 기준으로 처리됩니다. 콜백 함수를 사용하면 이러한 문제를 방지할 수 있습니다.
+> - **클로저에 의한 값의 '스냅샷'**: 함수형 업데이트를 사용하지 않으면, 이벤트 핸들러 내의 count 상태는 해당 함수가 생성될 당시의 값으로 고정됩니다. 이로 인해 실제 DOM 이벤트가 처리될 때 count의 최신 값이 아닌 오래된 값을 참조하는 문제가 발생할 수 있습니다.
+
+```jsx
+import React, { useState, useEffect } from "react";
+
+function AutoCounter() {
+  // 카운트 상태를 초기화합니다.
+  const [count, setCount] = useState(0);
+
+  // 컴포넌트가 마운트되면 setInterval을 설정합니다.
+  useEffect(() => {
+    // 매 초마다 카운트를 증가시키는 interval을 설정합니다.
+    const intervalId = setInterval(() => {
+      // setCount 함수에 현재 상태를 기반으로 다음 상태를 결정하는 함수를 전달합니다.
+      setCount((prevCount) => prevCount + 1);
+    }, 1000); // 1000ms = 1초
+
+    // 컴포넌트가 언마운트되거나 재렌더링되기 전에 interval을 정리합니다.
+    return () => clearInterval(intervalId);
+  }, []); // 의존성 배열이 비어 있으므로 이 effect는 마운트될 때 딱 한 번만 실행됩니다.
+
+  return (
+    <div>
+      <p>자동 카운트: {count}</p>
+    </div>
+  );
+}
+
+export default AutoCounter;
+```
+
+> 이 코드에서 `useEffect`의 의존성 배열이 빈 배열(`[]`)로 설정되어 있기 때문에, `useEffect` 내의 콜백 함수는 컴포넌트가 처음 마운트될 때 단 한 번만 실행됩니다. `setInterval`에 의해 호출되는 콜백 내에서 `setCount`는 이전 상태 값을 기반으로 새로운 상태 값을 계산하기 때문에, 실제 `count` 값이 어떻게 변화하든 항상 최신 상태를 기준으로 1을 더하게 됩니다. 따라서 카운터는 매 초마다 정확하게 `1`씩 증가합니다.
 
 #### 게으른 초기화(lazy initialization)
 
@@ -554,6 +593,7 @@ export default MyComponent;
 - [React 공식 문서, Rules of Hooks](https://legacy.reactjs.org/docs/hooks-rules.html)
   - (한국어 버전) [React 공식 문서, Rules of Hooks](https://ko.legacy.reactjs.org/docs/hooks-rules.html)
 - [React Dev, Rule of Hooks](https://react.dev/warnings/invalid-hook-call-warning)
+- [React Dev, useState](https://react.dev/reference/react/useState)
 
 <br>
 
