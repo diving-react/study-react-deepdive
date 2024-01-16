@@ -70,13 +70,16 @@ useEffect(() => {
    * 그리고 의존성 중 어느 것이든 변경될 때마다 호출됩니다.
    */
     return () => {
-        // clean-up
+        // clean-up(optional)
     }
 },
 [dependencies] // 이 useEffect 훅에 대한 의존성 배열입니다.
                // 의존성이 변경되면, useEffect에 전달된 함수가 다시 호출됩니다.
 );
 ```
+- **`clean-up function`**:
+  - 이 클린업 함수는 훅에서 생성된 리소스나 효과를 정리하는 데 사용됩니다.
+  - API에서 데이터를 가져오거나 이벤트 리스너를 설정하거나 간격이나 타임아웃을 생성하는 등의 부작용을 정리할 수 있습니다.
 
 ### 3.1.3 `useMemo`
 
@@ -397,3 +400,4 @@ export default MyComponent;
 - [A guide to memoization using React.memo](https://github.com/RicardoMorato/React.memo)
 - [Higher-Order Components In React](https://www.smashingmagazine.com/2020/06/higher-order-components-react/)
 - [HOC Pattern](https://www.patterns.dev/react/hoc-pattern/)
+- [Cleaning up with useEffect function](https://www.zipy.ai/blog/understanding-react-useeffect-cleanup-function#:~:text=This%20cleanup%20function%20is%20used,side%20effects%20one%20by%20one.)
