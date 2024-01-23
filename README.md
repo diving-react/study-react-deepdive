@@ -39,10 +39,10 @@
 | 2    | 리액트 핵심 요소 깊게 살펴보기                   | 2024/01/09 |
 | 3    | 리액트 훅 깊게 살펴보기                          | 2024/01/16 |
 | 4    | 서버 사이드 렌더링                               | 2024/01/23 |
-| 5    | 리액트와 상태 관리 라이브러리                    | 2024/01/30 |
-| 6    | 리액트 개발 도구로 디버깅하기                    | 2024/02/06 |
-| 10   | 리액트 17과 18의 변경 사항 살펴보기              | 2024/02/13 |
-| 11   | Next.js 13과 리액트 18                           | 2024/02/20 |
+| 11   | Next.js 13과 리액트 18                           | 2024/01/30 |
+| 5    | 리액트와 상태 관리 라이브러리                    | 2024/02/06 |
+| 6    | 리액트 개발 도구로 디버깅하기                    | 2024/02/13 |
+| 10   | 리액트 17과 18의 변경 사항 살펴보기              | 2024/02/20 |
 | 12   | 모든 웹 개발자가 관심을 가져야 할 핵심 웹 지표   | 2024/02/27 |
 | 13   | 웹페이지의 성능을 측정하는 다양한 방법           | 2024/03/05 |
 | 14   | 웹사이트 보안을 위한 리액트와 웹페이지 보안 이슈 | 2024/03/12 |
@@ -63,5 +63,9 @@
 <td align="center"><a href="https://github.com/skiende74"><img alt="skiende74" src="https://avatars.githubusercontent.com/u/86130706?v=4" width="117" /><br />skiende74</a></td>
 <td align="center"><a href="https://github.com/JungHun98"><img alt="JungHun98" src="https://avatars.githubusercontent.com/u/97653343?v=4" width="117" /><br />JungHun98</a></td>
 <td align="center"><a href="https://github.com/hyeok999"><img alt="hyeok999" src="https://avatars.githubusercontent.com/u/31315644?v=4" width="117" /><br />hyeok999</a></td>
+</tr>
+
+<tr>
+<td align="center"><a href="https://github.com/MinJeung-Kim"><img alt="MinJeung-Kim" src="https://avatars.githubusercontent.com/u/79193369?v=4" width="117" /><br />MinJeung-Kim</a></td>
 </tr>
 </table>
