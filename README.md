@@ -47,6 +47,17 @@
 | 13   | 웹페이지의 성능을 측정하는 다양한 방법           | 2024/03/05 |
 | 14   | 웹사이트 보안을 위한 리액트와 웹페이지 보안 이슈 | 2024/03/12 |
 
+
+<br>
+
+## Q&A
+
+| No. | Questions |
+|-------|-------|
+| 1 | [클래스 컴포넌트 대신 함수 컴포넌트를 언제 사용해야 하나요?](https://github.com/diving-react/study-react-deepdive/discussions/45) |
+
+
+
 <br>
 
 ## 💪 Participants
