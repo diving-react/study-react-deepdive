@@ -43,6 +43,10 @@
 
 ## 10.1 리액트 17 버전 살펴보기
 
+**[React v17.0 Release Candidate: No New Features](https://legacy.reactjs.org/blog/2020/08/10/react-v17-rc.html#no-new-features)**
+
+: React 17 릴리스는 새로운 개발자를 위한 기능을 추가하지 않는다는 점에서 이례적입니다. 대신, 이번 릴리스는 React 자체를 업그레이드하기 쉽게 만드는 데 주로 초점을 맞추고 있습니다. 이는 React의 미래 버전을 위한 "stepping stone" 역할을 하기 때문입니다. "Stepping stone"은 길을 걷는 동안 발을 옮기기 위해 사용하는 작은 돌이나 블록을 의미합니다. 이 용어는 비유적으로 어떤 목표를 달성하기 위한 중간 단계나 도구를 가리킬 때 사용됩니다. 즉, React 17이 "stepping stone" 릴리스라는 것은 React의 다른 버전으로 관리되는 트리를 안전하게 포함할 수 있는 중간 단계로서의 역할을 한다는 의미입니다.
+
 ### 10.1.1 리액트의 점진적인 업그레이드
 
 
