@@ -49,6 +49,70 @@
 
 ### 10.1.1 리액트의 점진적인 업그레이드
 
+**서로 다른 버전의 React를 한 어플리케이션 내에서 사용하는 시나리오**
+이 시나리오를 더 이해하기 쉽도록, 마이크로 프론트엔드 아키텍처를 사용하는 예를 들겠습니다. 마이크로 프론트엔드 아키텍처는 여러 개의 프론트엔드 어플리케이션을 하나의 큰 어플리케이션으로 통합하는 아키텍처입니다. 이 아키텍처는 각 마이크로 프론트엔드 어플리케이션을 독립적으로 개발하고 배포할 수 있도록 해줍니다. 이러한 아키텍처를 사용하면, 각 마이크로 프론트엔드 어플리케이션은 서로 다른 버전의 React를 사용할 수 있습니다. 예를 들어, 마이크로 프론트엔드 어플리케이션 A는 React 16을 사용하고, 마이크로 프론트엔드 어플리케이션 B는 React 17을 사용할 수 있습니다. 이러한 시나리오에서는, 마이크로 프론트엔드 어플리케이션 A와 B가 메인 애플리케이션과 함께 동작하도록 하기 위해, 메인 애플리케이션은 서로 다른 버전의 React를 함께 사용할 수 있어야 합니다.
+
+```tsx
+// A: 마이크로 프론트엔드의 엔트리 포인트 (React 16)
+// - 마이크로 프론트엔드는 독립적으로 기능을 수행하며, 메인 애플리케이션으로 메시지를 전달하는 기능을 포함합니다.
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class MicroFrontend extends React.Component {
+  sendMessageToMainApp(message) {
+    const event = new CustomEvent('microFrontendMessage', { detail: message });
+    window.dispatchEvent(event);
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>마이크로 프론트엔드 - React 16</h2>
+        <button onClick={() => this.sendMessageToMainApp('안녕하세요, 메인 애플리케이션!')}>
+          메인 애플리케이션에 메시지 보내기
+        </button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<MicroFrontend />, document.getElementById('micro-frontend-container'));
+
+
+```
+
+```tsx
+// B: 메인 애플리케이션의 엔트리 포인트 (React 17)
+// - 메인 애플리케이션은 사용자 인터페이스의 나머지 부분을 담당하며, 마이크로 프론트엔드에서 전달된 메시지를 받아 처리하는 기능을 포함합니다.
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+
+function MainApp() {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    window.addEventListener('microFrontendMessage', (event) => {
+      setMessage(event.detail);
+    });
+  }, []);
+
+  return (
+    <div>
+      <h1>메인 애플리케이션 - React 17</h1>
+      <div id="micro-frontend-container"></div>
+      {message && <p>마이크로 프론트엔드로부터 받은 메시지: {message}</p>}
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('app'));
+root.render(<MainApp />);
+```
+**[구현상의 주의사항]**
+- **이벤트 리스너 관리**: 메인 애플리케이션과 마이크로 프론트엔드 간의 메시지 전달은 window.dispatchEvent()와 window.addEventListener()를 사용하여 이벤트 기반으로 처리됩니다. 이벤트 리스너는 메모리 누수를 방지하기 위해 적절히 추가 및 제거되어야 합니다.
+- **보안 고려사항**: 외부에서 전달된 메시지를 처리할 때는 보안을 고려해야 합니다. XSS 공격과 같은 취약점을 방지하기 위해 메시지의 내용을 검증하고 적절히 이스케이프 처리하는 것이 중요합니다.
+- **성능 최적화**: 마이크로 프론트엔드 아키텍처는 추가적인 리소스 로딩과 초기화 시간을 필요로 할 수 있습니다. 필요한 경우 코드 스플리팅, 레이지 로딩 등의 기법을 사용하여 성능을 최적화해야 합니다.
+
 
 
 
