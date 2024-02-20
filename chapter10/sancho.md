@@ -20,6 +20,7 @@
 
 ## 10.2 리액트 18 버전 살펴보기
 
+- [ ] 10.2.1 새로 추가된 훅 살펴보기
 - [ ] 10.2.2 react-dom/client
 - [ ] 10.2.3 react-dom/server
 - [ ] 10.2.4 자동 배치(Automatic Batching)
