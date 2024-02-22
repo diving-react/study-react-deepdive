@@ -7,16 +7,16 @@
   - [10.1 리액트 17 버전 살펴보기](#101-리액트-17-버전-살펴보기)
     - [10.1.1 리액트의 점진적인 업그레이드](#1011-리액트의-점진적인-업그레이드)
     - [10.1.2 이벤트 위임 방식의 변경](#1012-이벤트-위임-방식의-변경)
-    - [10.1.3 import React from ‘reac’가 더 이상 필요 없다: 새로운 `JSX transform`](#1013-import-react-from-reac가-더-이상-필요-없다-새로운-jsx-transform)
+    - [10.1.3 `import React from ‘react’`가 더 이상 필요 없다: 새로운 `JSX transform`](#1013-import-react-from-react가-더-이상-필요-없다-새로운-jsx-transform)
     - [10.1.4 그 밖의 주요 변경 사항](#1014-그-밖의-주요-변경-사항)
     - [10.1.5 정리](#1015-정리)
   - [10.2 리액트 18 버전 살펴보기](#102-리액트-18-버전-살펴보기)
     - [10.2.1 새로 추가된 훅 살펴보기](#1021-새로-추가된-훅-살펴보기)
-    - [10.2.2 react-dom/client](#1022-react-domclient)
-    - [10.2.3 react-dom/server](#1023-react-domserver)
+    - [10.2.2 `react-dom/client`](#1022-react-domclient)
+    - [10.2.3 `react-dom/server`](#1023-react-domserver)
     - [10.2.4 자동 배치(Automatic Batching)](#1024-자동-배치automatic-batching)
     - [10.2.5 더욱 엄격해진 엄격 모드](#1025-더욱-엄격해진-엄격-모드)
-    - [10.2.6 Suspense 기능 강화](#1026-suspense-기능-강화)
+    - [10.2.6 `Suspense` 기능 강화](#1026-suspense-기능-강화)
     - [10.2.7 인터넷 익스플로러 지원 중단에 따른 추가 폴리필 필요](#1027-인터넷-익스플로러-지원-중단에-따른-추가-폴리필-필요)
     - [10.2.8 그 밖에 알아두면 좋은 변경사항](#1028-그-밖에-알아두면-좋은-변경사항)
     - [10.2.9 정리](#1029-정리)
@@ -203,9 +203,88 @@ ReactDOM.render(<App />, document.getElementById('app'));
 **[주의사항]**
 - 이 변경사항은 React 17 이상에서만 적용됩니다.
 
-### 10.1.3 import React from ‘reac’가 더 이상 필요 없다: 새로운 `JSX transform`
+### 10.1.3 `import React from ‘react’`가 더 이상 필요 없다: 새로운 `JSX transform`
+
+**[기존 JSX 변환 방식과의 차이점]**
+- **기존 방식**: JSX 사용 시 매번 `React.createElement` 호출 필요 → 파일 상단에 `import React from 'react'` 필수
+- **React 17 새 방식**: `jsx` 및 `jsxs` 함수 자동 호출 → 명시적인 `React import` 불필요
+
+**[빌드 도구 및 Babel 설정 변경]**
+- **영향**: 주로 빌드 도구와 Babel 설정에 영향
+- **Babel 설정 예시**:
+  - `.babelrc` 파일 또는 Babel 설정에 `@babel/plugin-transform-react-jsx` 플러그인 추가
+  - `runtime`: `'automatic'` 옵션으로 새 JSX 변환 활성화
+
+**[새 JSX 변환 방식의 선택적 사용]**
+- **호환성**: React 17은 기존 변환 방식과 새 변환 방식 모두 지원
+- **권장 사항**: 새 프로젝트 또는 기존 프로젝트 업데이트 시 새 방식으로 전환 고려
 
 
+```jsx
+// React 17 이전
+import React from 'react'; // 필수
+
+function App() {
+  return <h1>Hello, world!</h1>;
+}
+```
+
+```jsx
+// React 17 이후: 새로운 JSX 변환 방식
+// import React from 'react'; // 이제 생략 가능
+
+function App() {
+  return <h1>Hello, world!</h1>;
+}
+```
+
+```bash
+# Babel이 React.createElement 대신 jsx 또는 jsxs 함수를 사용하도록 설정 변경
+{
+  "plugins": [
+    ["@babel/plugin-transform-react-jsx", { "runtime": "automatic" }]
+  ]
+}
+```
+
+**[주의]**
+- React 17 이후에는 React를 명시적으로 `import`하지 않아도 되지만, 여전히 훅을 사용하기 위해서는 해당 훅(`useState`, `useEffect` 등)을 `import`해야 합니다.
+   - React의 네임스페이스를 직접 사용하지 않는 한, import React를 생략할 수 있지만, 훅들은 각각 필요에 따라 import해야 합니다.
+
+```jsx
+// React 17 이전: 함수형 컴포넌트에서 상태 관리를 위해 useState 훅을 사용하는 경우
+import React, { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>현재 카운트: {count}</p>
+      <button onClick={() => setCount(count + 1)}>증가</button>
+    </div>
+  );
+}
+```
+
+```jsx
+// React 17 이후: 새로운 JSX 변환 방식
+// import React, { useState } from 'react'; // 이제 생략 가능
+import { useState } from 'react'; // React import는 생략하고, useState만 import
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>현재 카운트: {count}</p>
+      <button onClick={() => setCount(count + 1)}>증가</button>
+    </div>
+  );
+}
+```
+
+- **참고**: [React, Introducing the New JSX Transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html)
 
 ### 10.1.4 그 밖의 주요 변경 사항
 ### 10.1.5 정리
@@ -215,11 +294,11 @@ ReactDOM.render(<App />, document.getElementById('app'));
 ## 10.2 리액트 18 버전 살펴보기
 
 ### 10.2.1 새로 추가된 훅 살펴보기
-### 10.2.2 react-dom/client
-### 10.2.3 react-dom/server
+### 10.2.2 `react-dom/client`
+### 10.2.3 `react-dom/server`
 ### 10.2.4 자동 배치(Automatic Batching)
 ### 10.2.5 더욱 엄격해진 엄격 모드
-### 10.2.6 Suspense 기능 강화
+### 10.2.6 `Suspense` 기능 강화
 ### 10.2.7 인터넷 익스플로러 지원 중단에 따른 추가 폴리필 필요
 ### 10.2.8 그 밖에 알아두면 좋은 변경사항
 ### 10.2.9 정리
