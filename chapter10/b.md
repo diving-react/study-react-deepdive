@@ -7,7 +7,7 @@
   - [10.1 리액트 17 버전 살펴보기](#101-리액트-17-버전-살펴보기)
     - [10.1.1 리액트의 점진적인 업그레이드](#1011-리액트의-점진적인-업그레이드)
     - [10.1.2 이벤트 위임 방식의 변경](#1012-이벤트-위임-방식의-변경)
-    - [10.1.3 import React from ‘reac’가 더 이상 필요 없다: 새로운 JSX transform](#1013-import-react-from-reac가-더-이상-필요-없다-새로운-jsx-transform)
+    - [10.1.3 import React from ‘reac’가 더 이상 필요 없다: 새로운 `JSX transform`](#1013-import-react-from-reac가-더-이상-필요-없다-새로운-jsx-transform)
     - [10.1.4 그 밖의 주요 변경 사항](#1014-그-밖의-주요-변경-사항)
     - [10.1.5 정리](#1015-정리)
   - [10.2 리액트 18 버전 살펴보기](#102-리액트-18-버전-살펴보기)
@@ -120,33 +120,93 @@ root.render(<MainApp />);
 
 ### 10.1.2 이벤트 위임 방식의 변경
 
-이전 버전인 `React 16`까지는 대부분의 이벤트에 대하여 React가 `문서(document)` 레벨에서 `addEventListener()`를 사용하여 이벤트 핸들러를 추가했습니다. 그러나 `React 17`부터는 이벤트 핸들러를 문서 레벨이 아닌 `루트 DOM 컨테이너`에 직접 추가하게 됩니다.
+이전 버전인 `React 16`까지는 대부분의 이벤트에 대하여 React가 `문서(document)` 레벨에서 `addEventListener()`를 사용하여 이벤트 위임(event delegation)을 통해 전역적으로 이벤트를 관리했습니다. 그러나 `React 17`부터는 이벤트 핸들러를 문서 레벨이 아닌 각각의 루트 컨테이너에 이벤트 핸들러를 연결하여 독립적인 이벤트 관리가 가능해졌습니다.
 
-이러한 변경은 React의 이벤트 위임 방식을 개선하기 위한 것입니다. 이벤트 위임은 여러 하위 컴포넌트에서 발생한 이벤트를 하나의 상위 컴포넌트에서 처리하는 방식을 의미합니다. 이러한 방식은 이벤트 핸들러를 추가하는 횟수를 줄이고, 이벤트 버블링(bubbling)에 대한 제어를 개선하며, 새로운 브라우저 기능과의 호환성을 향상시킵니다. 하지만 기존 코드에 영향을 줄 수 있는 잠재적인 브레이킹 체인지(breaking changes)이므로 주의가 필요합니다.
+**[목적]**
+- **이벤트 핸들링의 호환성 개선**: React 앱과 다른 애플리케이션 또는 라이브러리 간의 이벤트 핸들링 충돌을 줄이기 위함입니다. 예를 들어, React 외부에서 추가된 이벤트 리스너와 충돌 없이 동작할 수 있도록 하기 위해 이 변경이 도입되었습니다.
+- **React 트리 내의 이벤트 핸들링 개선**: 이전에는 React 이벤트 핸들러가 `document` 레벨에서 작동했기 때문에, 여러 React 루트가 존재하는 경우 이벤트가 예측하지 못한 방식으로 전파될 수 있었습니다. `React 17`에서는 각각의 루트에 대해 독립적인 이벤트 핸들링이 가능해졌습니다.
+
 
 ![이벤트 위임 방식의 변경](https://legacy.reactjs.org/static/bb4b10114882a50090b8ff61b3c4d0fd/31868/react_17_delegation.png)
 
-```tsx
-// React 16
-const handleClick = (event) => {
-  console.log('클릭 이벤트가 발생했습니다.');
-};
+```jsx
+// (예제1) React17 이하 버전의 이벤트 핸들링
+// index.html 파일 내에 있는 루트 엘리먼트
+<div id="app"></div>
 
-document.addEventListener('click', handleClick);
+// App.js
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-// React 17
-ReactDOM.render(<App />, document.getElementById('root'));
-``` 
+class App extends React.Component {
+  handleClick = () => {
+    console.log('클릭 이벤트가 document에서 처리됩니다.');
+  }
 
-**[변경사항의 장점]**
+  componentDidMount() {
+    // document에 직접 이벤트 리스너를 추가
+    document.addEventListener('click', this.handleClick);
+  }
+
+  componentWillUnmount() {
+    // document에서 이벤트 리스너를 제거
+    document.removeEventListener('click', this.handleClick);
+  }
+
+  render() {
+    return (
+      <div>
+        <button>클릭</button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('app'));
+```
+> React 17 이전 버전에서는 `componentDidMount`와 `componentWillUnmount` 생명주기 메서드를 사용하여 `document`에 직접 이벤트 리스너를 추가하고 제거했습니다.
+
+```jsx
+// (예제2) React17 이후 버전의 이벤트 핸들링
+// index.html 파일 내에 있는 루트 엘리먼트
+<div id="app"></div>
+
+// App.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+  handleClick = () => {
+    console.log('클릭 이벤트가 루트 컨테이너에서 처리됩니다.');
+  }
+
+  render() {
+    return (
+      // 루트 컨테이너에 직접 이벤트 리스너를 연결
+      <div onClick={this.handleClick}>
+        <button>클릭</button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('app'));
+```
+> 반면, React 17 이후 버전에서는 React 요소에 직접 이벤트 핸들러를 선언하여 루트 컨테이너에 연결된 이벤트를 처리합니다. 이러한 변경으로 인해, 각각의 루트 컨테이너 내에서 독립적으로 이벤트를 관리할 수 있게 되었으며, 애플리케이션의 다른 부분(예: jQuery)과의 이벤트 충돌을 줄일 수 있게 되었습니다.
+
+
+**[추가]**
 - **다중 버전 통합의 용이성**: 이전에는 `e.stopPropagation()`이 여러 버전의 React 트리 사이에서 예상대로 작동하지 않아, 다른 버전의 `React`를 내장하는 것이 어려웠습니다. `React 17`의 변경으로, 이벤트 전파를 보다 명확하게 제어할 수 있게 되어, 점진적 업그레이드가 용이해졌습니다.
 - **비-React 코드와의 통합 개선**: `React` 코드 내에서 `e.stopPropagation()`을 사용하면 이제 `jQuery`와 같은 외부 코드로 이벤트가 전파되는 것을 예상대로 방지할 수 있습니다. 이는 React 애플리케이션을 다른 기술로 구축된 앱에 통합할 때 유용합니다.
 - **포탈(Portals)과의 호환성**: 루트 컨테이너 바깥에 있는 포탈에 대한 우려가 있었으나, React는 포탈 컨테이너에서도 이벤트를 감지하기 때문에 문제가 되지 않습니다.
 
 **[주의사항]**
-- 이 변경사항은 React 17 이상에서만 적용됩니다. 
+- 이 변경사항은 React 17 이상에서만 적용됩니다.
 
-### 10.1.3 import React from ‘reac’가 더 이상 필요 없다: 새로운 JSX transform
+### 10.1.3 import React from ‘reac’가 더 이상 필요 없다: 새로운 `JSX transform`
+
+
+
 ### 10.1.4 그 밖의 주요 변경 사항
 ### 10.1.5 정리
 
