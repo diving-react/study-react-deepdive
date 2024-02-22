@@ -284,6 +284,30 @@ function Counter() {
 }
 ```
 
+**`npx react-codemod update-react-imports` 적용**
+`npx react-codemod update-react-imports` 명령어는 React 코드베이스에서 React 17 이상에서 도입된 자동 JSX 변환을 활용하기 위해 React의 import 방식을 업데이트하는 데 사용됩니다.
+
+**[사용 전 준비사항]**
+  - 프로젝트의 백업을 만들거나, Git과 같은 버전 관리 시스템을 사용하여 변경 전 상태를 커밋해두세요.
+  - 프로젝트에 대한 모든 의존성이 설치되어 있고, 프로젝트가 정상적으로 빌드되는지 확인하세요.
+
+```bash
+# 이 명령어를 프로젝트의 루트 디렉토리에서 실행하면, 프로젝트 내의 모든 JavaScript 파일들이 새로운 JSX 변환 방식에 맞게 업데이트됩니다.
+npx react-codemod update-react-imports
+```
+
+**`react-codemod rename-unsafe-lifecycles` 적용**
+`react-codemod rename-unsafe-lifecycles` 명령어는 React 생명주기 메소드 중에서 안전하지 않은 것들을 새로운 이름으로 변경합니다.
+
+- **사용 전 준비사항**:
+  - 위와 동일하게 프로젝트의 백업을 만들거나, 버전 관리 시스템을 사용하여 변경 전 상태를 커밋해두세요.
+
+```bash
+# 명령어 실행
+npx react-codemod rename-unsafe-lifecycles --force
+```
+> `--force` 옵션을 사용하면 경고 없이 파일을 덮어쓸 수 있습니다. 하지만 예상치 못한 부작용을 일으킬 수 있기 때문에, 실행 후 반드시 애플리케이션이 여전히 올바르게 작동하는지 확인해야 합니다.
+
 - **참고**: [React, Introducing the New JSX Transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html)
 
 ### 10.1.4 그 밖의 주요 변경 사항
