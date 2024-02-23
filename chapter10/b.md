@@ -329,3 +329,5 @@ npx react-codemod rename-unsafe-lifecycles --force
 
 ## References
 - [React v17.0 Release Candidate: No New Features](https://legacy.reactjs.org/blog/2020/08/10/react-v17-rc.html)
+- [React, Changelog](https://github.com/facebook/react/blob/main/CHANGELOG.md)
+- [React, React v18.0](https://react.dev/blog/2022/03/29/react-v18)
