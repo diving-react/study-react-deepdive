@@ -328,11 +328,33 @@ React 18에서 새롭게 추가되었으며, 애플리케이션의 성능 최적
 | `useTransition`        | 컴포넌트 상태의 업데이트를 "transition"으로 표시할 때 사용되며, 상태 업데이트를 비동기적으로 처리하고, 업데이트 중인 상태를 사용자에게 알릴 수 있는 기능을 제공합니다. 이는 로딩 인디케이터와 같은 UI를 관리하는데 유용합니다. |
 | `useSyncExternalStore` | 외부 저장소(예: Redux)의 상태를 구독하고 React의 상태 업데이트와 동기화할 때 사용합니다. Redux와 같은 상태 관리 라이브러리와의 통합에 주로 사용됩니다. |
 
-위의 Hooks는 
-
 ### 10.2.2 `react-dom/client`
 ### 10.2.3 `react-dom/server`
 ### 10.2.4 자동 배치(Automatic Batching)
+
+> 자동 배치(Automatic Batching) 기능은 성능 향상을 위해 여러 상태 업데이트를 단일 재렌더링으로 그룹화하는 기능입니다.
+
+리액트 18 이전 버전에서는 `Promise`, `setTimeout`, 네이티브 이벤트 핸들러 또는 기타 이벤트 내부의 업데이트는 기본적으로 React에서 배치 처리되지 않았습니다. 그러나 자동 배치 기능을 통해 이제 이러한 업데이트들도 자동으로 배치 처리됩니다. 예를 들어, `setTimeout` 내부에서 상태를 두 번 업데이트하는 경우, React 18 이전에는 각 상태 업데이트마다 별도의 렌더링이 발생했을 것입니다. 하지만 React 18에서는 이러한 업데이트들이 자동으로 배치 처리되어 단 한 번의 렌더링으로 처리됩니다.
+
+```javascript
+// 이전: 오직 React 이벤트만 배치 처리됨.
+setTimeout(() => {
+  setCount(c => c + 1);
+  setFlag(f => !f);
+  // React가 각 상태 업데이트마다 두 번 렌더링함 (배치 처리 없음)
+}, 1000);
+
+// 이후: setTimeout, Promise,
+// 네이티브 이벤트 핸들러 또는 기타 이벤트 내부의 업데이트도 배치 처리됨.
+setTimeout(() => {
+  setCount(c => c + 1);
+  setFlag(f => !f);
+  // React가 마지막에 한 번만 렌더링함 (배치 처리!)
+}, 1000);
+```
+
+이렇게 자동 배치 기능을 통해 애플리케이션의 성능 향상과 불필요한 렌더링을 줄여 사용자 경험을 개선되는 것을 기대할 수 있습니다.
+
 ### 10.2.5 더욱 엄격해진 엄격 모드
 ### 10.2.6 `Suspense` 기능 강화
 ### 10.2.7 인터넷 익스플로러 지원 중단에 따른 추가 폴리필 필요
@@ -343,3 +365,4 @@ React 18에서 새롭게 추가되었으며, 애플리케이션의 성능 최적
 - [React v17.0 Release Candidate: No New Features](https://legacy.reactjs.org/blog/2020/08/10/react-v17-rc.html)
 - [React, Changelog](https://github.com/facebook/react/blob/main/CHANGELOG.md)
 - [React, React v18.0](https://react.dev/blog/2022/03/29/react-v18)
+- [React, New feature: Automatic Batching](https://github.com/reactjs/rfcs/blob/react-18/text/0212-react-18.md#new-feature-automatic-batching)
