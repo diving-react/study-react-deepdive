@@ -19,6 +19,12 @@
     - [12.4.3 예제](#1243-예제)
     - [12.4.4 기준 점수](#1244-기준-점수)
     - [12.4.5 개선 방안](#1245-개선-방안)
+      - [개선 방안1: 코드 분할](#개선-방안1-코드-분할)
+      - [개선 방안2: 자바스크립트 최적화](#개선-방안2-자바스크립트-최적화)
+      - [개선 방안3: 웹 워커 활용](#개선-방안3-웹-워커-활용)
+      - [개선 방안4: 효율적인 이벤트 리스너 사용](#개선-방안4-효율적인-이벤트-리스너-사용)
+      - [개선 방안5: 서드파티 스크립트 최적화](#개선-방안5-서드파티-스크립트-최적화)
+      - [그 밖에 기타 개선 방안:](#그-밖에-기타-개선-방안)
   - [12.5 누적 레이아웃 이동(CLS)](#125-누적-레이아웃-이동cls)
     - [12.5.1 정의](#1251-정의)
     - [12.5.2 의미](#1252-의미)
@@ -297,21 +303,276 @@ LCP(Largest Contentful Paint)의 로딩 속도를 향상시키기 위해 중요 
 <br>
 
 ## 12.4 최초 입력 지연(FID)
+
 ### 12.4.1 정의
+
+최초 입력 지연(FID)은 사용자가 페이지와 상호작용(예: 클릭, 탭)을 시도한 후, 브라우저가 해당 상호작용에 대해 응답을 시작하기까지의 지연 시간을 측정하는 성능 지표입니다. 이는 사용자가 웹사이트의 대화형 요소를 처음으로 조작할 때 발생하는 지연을 측정하여, 실제 사용자 경험의 반응성을 평가합니다.
+
 ### 12.4.2 의미
+
+FID는 사용자가 웹사이트와 상호작용하는 첫 순간의 반응 시간이 얼마나 빠른지를 나타내며, 이는 사용자가 웹사이트를 얼마나 '빠르고 반응적'으로 느끼는지에 직접적인 영향을 줍니다. 높은 FID 점수는 사용자가 웹사이트와의 상호작용에 만족하지 못한다는 신호일 수 있으며, 이는 전환율 감소와 같은 부정적인 결과를 초래할 수 있습니다.
+
 ### 12.4.3 예제
+
+사용자가 뉴스 기사를 읽다가 '더 보기' 버튼을 클릭했을 때, 버튼 클릭 후 실제로 기사 내용이 확장되어 보이기까지 걸리는 시간이 FID로 측정됩니다. 만약 이 시간이 길다면 사용자는 페이지가 느리게 반응한다고 느낄 것입니다.
+
 ### 12.4.4 기준 점수
+
+- 좋음: 100ms 이하
+- 개선 필요: 100ms ~ 300ms
+- 나쁨: 300ms 이상
+
+웹사이트가 '좋음' 범주에 속하려면 최초 입력 지연이 100ms 이하가 되어야 합니다. 이는 사용자가 페이지와 상호작용할 때 거의 즉각적인 반응을 경험한다는 것을 의미합니다.
+
 ### 12.4.5 개선 방안
+
+#### 개선 방안1: 코드 분할
+
+LCP에서 본 것 처럼 `React.lazy`와 `Suspense`를 사용하여 필요한 컴포넌트만 로드하고, 나머지 부분은 필요할 때 가져오도록 합니다. 이렇게 하면 초기 로딩 시간이 줄어들고, 사용자 상호작용에 대한 응답성이 향상됩니다.
+
+#### 개선 방안2: 자바스크립트 최적화
+
+필요하지 않은 `JavaScript` 코드를 제거하거나 비동기적으로 로드하여 메인 스레드의 부하를 줄입니다.
+
+2. **메모이제이션(Memoization)**: `React.memo`, `useMemo`, `useCallback`과 같은 훅을 사용하여 불필요한 렌더링을 방지합니다.
+
+1. **이벤트 핸들러 최적화**: `debounce` 또는 `throttle`을 사용하여 이벤트 핸들러를 최적화할 수 있습니다. 예를 들어, `Lodash` 라이브러리에서 제공하는 `debounce` 함수를 사용하여 스크롤 이벤트를 최적화하는 방법은 다음과 같습니다:
+
+  ```jsx
+  import React, { useEffect } from 'react';
+  import _ from 'lodash';
+
+  function MyComponent() {
+    const handleScroll = _.debounce(() => {
+      // 스크롤 이벤트 핸들러 로직
+      console.log('Scroll event handled with debounce!');
+    }, 200); // 200ms 마다 이벤트 핸들러가 호출되도록 설정
+
+    useEffect(() => {
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+
+    return <div>스크롤 이벤트 최적화 예제</div>;
+  }
+
+  export default MyComponent;
+  ```
+
+1. **메모이제이션(Memoization)**: 컴포넌트의 불필요한 렌더링을 방지하기 위해 `React.memo`, `useMemo`, `useCallback`를 사용할 수 있습니다.
+
+```jsx
+// 자식 컴포넌트가 `props`가 변경되지 않았다면 불필요하게 렌더링되지 않도록 `React.memo`를 사용하는 방법:
+import React, { useMemo, useCallback } from 'react';
+
+// React.memo로 감싼 자식 컴포넌트
+// MemoizedChildComponent는 부모 컴포넌트에서 전달받는 props가 변경되지 않으면 재렌더링되지 않습니다.
+const MemoizedChildComponent = React.memo(function ChildComponent({ onButtonClick }) {
+  console.log('자식 컴포넌트 렌더링');
+  return (
+    <button onClick={onButtonClick}>클릭</button>
+  );
+});
+
+function MyComponent() {
+  const [count, setCount] = React.useState(0);
+
+  // useCallback을 사용하여 함수가 재생성되는 것을 방지
+  const handleButtonClick = useCallback(() => {
+    setCount((prevCount) => prevCount + 1);
+  }, []);
+
+  // useMemo를 사용하여 복잡한 계산 결과를 메모이제이션
+  const memoizedValue = useMemo(() => {
+    return computeExpensiveValue(count);
+  }, [count]);
+
+  return (
+    <div>
+      <p>계산된 값: {memoizedValue}</p>
+      <MemoizedChildComponent onButtonClick={handleButtonClick} />
+    </div>
+  );
+}
+
+// 복잡한 계산을 수행하는 함수 (예제를 위한 것으로 실제 복잡한 로직을 포함해야 함)
+function computeExpensiveValue(a) {
+  console.log('복잡한 계산 수행');
+  return a * 2; // 실제로는 더 복잡한 계산이 수행됩니다.
+}
+
+export default MyComponent;
+```
+
+#### 개선 방안3: 웹 워커 활용
+
+웹 워커를 사용하면 복잡한 계산이나 데이터 처리를 백그라운드에서 수행할 수 있으므로, 메인 스레드가 사용자 인터페이스(UI)와 상호작용하는 데 더 많은 자원을 할당할 수 있습니다. 웹 워커를 사용하면 메인 스레드가 UI 업데이트와 이벤트 처리에 집중할 수 있으므로 First Input Delay(FID)를 줄이는 데 도움이 될 수 있습니다.
+
+> 웹 워커는 메인 스레드와 별개로 작동하는 백그라운드 스레드입니다.
+
+
+**[React.js에서 웹 워커를 사용하여 FID를 줄이는 방법]:**
+
+1. 웹 워커 파일 생성: 복잡한 연산을 수행하는 자바스크립트 코드를 별도의 파일로 만듭니다. 이 파일은 웹 워커 스레드에서 실행됩니다.
+2. 웹 워커 초기화: React 컴포넌트 내에서 `new Worker()`를 사용하여 웹 워커를 초기화합니다. 워커 파일의 경로를 인자로 전달해야 합니다.
+3. 메시지 전송 및 수신: 메인 스레드와 웹 워커 사이에 `postMessage` 메소드를 사용하여 데이터를 주고받습니다. `onmessage` 이벤트 핸들러를 통해 웹 워커로부터 결과를 수신할 수 있습니다.
+4. 웹 워커 종료: 작업이 완료되면 `terminate()` 메소드를 호출하여 웹 워커를 종료합니다.
+
+```javascript
+// 웹 워커 파일 (worker.js)
+self.addEventListener('message', (e) => {
+  const result = performHeavyComputation(e.data);
+  postMessage(result);
+});
+
+function performHeavyComputation(data) {
+  // 복잡한 계산 수행
+}
+```
+
+```javascript
+import React, { useEffect } from 'react';
+
+const MyComponent = () => {
+  useEffect(() => {
+    const worker = new Worker('worker.js');
+
+    worker.postMessage(data); // 복잡한 계산을 위해 데이터 전송
+
+    worker.onmessage = (e) => {
+      const result = e.data;
+      // 결과 처리
+    };
+
+    return () => {
+      worker.terminate(); // 컴포넌트 언마운트 시 워커 종료
+    };
+  }, []);
+
+  return (
+    // UI 컴포넌트 렌더링
+  );
+};
+
+export default MyComponent;
+```
+
+그러나 모든 브라우저가 웹 워커를 지원하는 것은 아니며, 특히 모바일 환경에서는 지원 여부를 확인해야 합니다.
+또 웹 워커와 관련된 성능 개선은 애플리케이션의 복잡성과 사용자의 기대치에 따라 다르게 적용될 수 있으므로, 실제 개발 환경에서 적절한 테스트와 평가가 중요합니다.
+
+#### 개선 방안4: 효율적인 이벤트 리스너 사용
+
+`passive event listeners`를 사용하여 터치 및 스크롤 이벤트 처리 성능을 개선합니다.
+
+> `passive event listeners`:
+> "Passive event listeners"는 웹 페이지의 스크롤 성능을 향상시키기 위해 W3C에서 제안된 새로운 기능입니다. 이 기능은 특히 모바일 브라우저에서 터치 및 스크롤 이벤트 처리를 최적화하는 데 도움이 됩니다. Passive event listeners는 이벤트 리스너가 `preventDefault`를 호출하지 않음을 브라우저에 알려줌으로써, 브라우저가 이벤트를 더 빨리 처리할 수 있도록 합니다.
+
+```jsx
+import React, { useEffect } from 'react';
+
+function TouchScrollComponent() {
+  useEffect(() => {
+    // 터치 이벤트 리스너를 추가합니다.
+    const handleTouchMove = (event) => {
+      // 여기서는 preventDefault를 호출하지 않습니다.
+      console.log('Touch move event detected!');
+    };
+
+    // passive 옵션을 true로 설정하여 passive listener로 등록합니다.
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
+    return () => {
+      window.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
+
+  return (
+    <div>
+      {/* 컴포넌트의 내용 */}
+      <p>터치 및 스크롤 이벤트 처리 성능을 개선합니다.</p>
+    </div>
+  );
+}
+
+export default TouchScrollComponent;
+```
+
+> 위의 코드에서 `useEffect` 훅은 컴포넌트가 마운트될 때 `touchmove` 이벤트 리스너를 추가하고, 컴포넌트가 언마운트될 때 해당 리스너를 제거합니다. 이벤트 리스너에 `{ passive: true }` 옵션을 주어서 해당 이벤트가 `preventDefault`를 호출하지 않음을 명시하고 있습니다. 이렇게 하면 브라우저가 스크롤 성능을 최적화할 수 있으며, 사용자 인터페이스의 반응성이 향상됩니다.
+
+#### 개선 방안5: 서드파티 스크립트 최적화
+
+필수적이지 않은 서드파티 스크립트의 로딩을 지연시키거나 비동기로 로드합니다.
+
+1. `useEffect` 훅을 사용하여 컴포넌트가 마운트된 후 스크립트를 동적으로 삽입:
+
+    ```jsx
+    import React, { useEffect } from 'react';
+
+    function ThirdPartyScripts() {
+      useEffect(() => {
+        // 서드파티 스크립트의 URL
+        const scriptUrl = 'https://example.com/third-party-script.js';
+
+        // 스크립트 엘리먼트 생성
+        const script = document.createElement('script');
+        script.src = scriptUrl;
+        script.async = true; // 스크립트를 비동기로 로드
+
+        // 스크립트 엘리먼트를 문서에 삽입
+        document.body.appendChild(script);
+
+        // 컴포넌트 언마운트 시 스크립트 제거
+        return () => {
+          document.body.removeChild(script);
+        };
+      }, []); // 빈 의존성 배열을 사용하여 컴포넌트 마운트 시 한 번만 실행
+
+      return (
+        <div>
+          {/* 여기에 다른 컴포넌트 내용을 넣을 수 있습니다. */}
+        </div>
+      );
+    }
+
+    export default ThirdPartyScripts;
+    ```
+
+    > 위 코드는 컴포넌트가 마운트될 때 서드파티 스크립트를 비동기로 로드하고, 컴포넌트가 언마운트될 때 해당 스크립트를 제거합니다. 이렇게 함으로써 페이지 로드 시간에 영향을 미치지 않으면서 필요한 기능을 제공할 수 있습니다.
+
+2. `defer` 속성을 사용:
+   문서 파싱 후 스크립트가 실행되도록 지연 로딩할 수도 있습니다. 이 경우, `script.defer = true;`를 설정하면 됩니다.
+
+
+#### 그 밖에 기타 개선 방안:
+  1. **상태 관리 최적화**: 상태 관리 라이브러리(예: Redux, MobX)를 사용할 때, 컴포넌트가 필요로 하는 최소한의 상태만 구독하게 하여 불필요한 업데이트를 방지합니다.
+  2. **서버 사이드 렌더링(SSR) 또는 정적 사이트 생성(SSG)**: 초기 페이지 로드 시 서버에서 HTML을 미리 생성하여 전송함으로써 `FID`를 개선할 수 있습니다.
+  3. **프로파일링 및 성능 모니터링**: `React DevTools`의 `Profiler`나 `Chrome DevTools` 같은 도구를 사용하여 성능 병목 현상을 찾고 개선합니다.
 
 <br>
 
 ## 12.5 누적 레이아웃 이동(CLS)
+
 ### 12.5.1 정의
+누적 레이아웃 이동(CLS)은 사용자와의 상호 작용 없이 발생하는 시각적 안정성 문제를 측정하는 지표입니다. 페이지 로딩 중 또는 이후에 요소가 예상치 못하게 위치를 변경할 때 발생하는 레이아웃 이동의 정도를 수치로 나타냅니다. CLS 점수는 이러한 이동들의 영향을 합산하여 계산됩니다.
+
 ### 12.5.2 의미
+CLS는 사용자가 웹사이트를 사용할 때 발생하는 불편함과 혼란을 최소화하기 위해 중요한 지표입니다. 높은 CLS 점수는 페이지 내 요소들이 안정적으로 고정되어 있지 않고 사용자가 읽거나 상호 작용하려 할 때 예기치 않게 움직이는 경우를 나타내며, 이는 사용자 경험을 저해할 수 있습니다.
+
 ### 12.5.3 예제
+사용자가 기사를 읽는 동안 페이지 상단에 광고가 로드되어 본문 내용이 갑자기 아래로 밀리는 경우, 이러한 레이아웃의 이동이 CLS 점수에 영향을 줍니다. 사용자가 링크를 클릭하려 할 때 위치가 변경되어 다른 링크를 클릭하게 만드는 것도 높은 CLS를 초래합니다.
+
 ### 12.5.4 기준 점수
+CLS 점수는 0에서 1 사이의 값으로 표현되며, 0에 가까울수록 좋은 성능을 의미합니다. 일반적으로 0.1 이하면 좋은 사용자 경험을, 0.1에서 0.25 사이는 개선이 필요한 수준, 0.25 이상은 나쁜 사용자 경험으로 간주됩니다.
+
 ### 12.5.5 개선 방안
+CLS를 개선하기 위한 방법으로는 이미지와 광고와 같은 미디어 요소에 고정된 크기를 지정하는 것, 동적 콘텐츠가 로드되기 전에 충분한 공간을 예약하는 것, 웹 폰트 로딩이나 기타 동적 요소로 인한 레이아웃 변화를 피하는 것 등이 있습니다.
+
 ### 12.5.6 핵심 웹 지표는 아니지만 성능 확인에 중요한 지표들
+CLS는 핵심 웹 바이탈스의 일부분으로, 웹사이트의 사용자 경험을 평가하는 데 중요한 역할을 합니다. 그 외에도 성능 확인에 중요한 지표들로는 웹사이트의 로딩 속도를 나타내는 최대 콘텐츠 페인트(LCP), 서버 응답 시간, 인터랙티브성을 나타내는 시간대비 첫 번째 바이트(TTFB) 등이 있으며, 이러한 지표들도 사용자 경험과 SEO에 영향을 미치므로 주의 깊게 모니터링하고 최적화해야 합니다.
 
 <br>
 
