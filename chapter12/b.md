@@ -12,6 +12,7 @@
     - [개선 방안3: 서버 사이드 렌더링(SSR) 또는 정적 사이트 생성(SSG)](#개선-방안3-서버-사이드-렌더링ssr-또는-정적-사이트-생성ssg)
     - [개선 방안4: 자바스크립트 및 CSS 최적화](#개선-방안4-자바스크립트-및-css-최적화)
     - [개선 방안5: 캐싱 전략](#개선-방안5-캐싱-전략)
+    - [개선 방안6: 중요 자산 미리 로드](#개선-방안6-중요-자산-미리-로드)
   - [12.4 최초 입력 지연(FID)](#124-최초-입력-지연fid)
     - [12.4.1 정의](#1241-정의)
     - [12.4.2 의미](#1242-의미)
@@ -126,8 +127,7 @@ LCP(Largest Contentful Paint)를 개선하기 위해 React 애플리케이션에
 코드 스플리팅을 적절히 구현하면 LCP를 포함한 다양한 성능 지표가 개선될 수 있습니다. 하지만 모든 컴포넌트나 모듈을 분할하는 것이 항상 좋은 것은 아니므로, 실제 애플리케이션의 로딩 성능을 분석하고 가장 크기가 크고 중요도가 높은 부분부터 분할하는 것이 좋습니다.
 
 ### 개선 방안2: 이미지 최적화
-LCP(Largest Contentful Paint)를 개선하기 위해 이미지 최적화도 중요합니다.
-이미지 최적화의 방법으로 이미지 파일 크기를 압축하거나 `AVIF` 또는 `WebP`와 같은 포맷으로 변경하는 것은 이미지 파일 크기를 줄일 수 있지만, 이는 리소스 로드 시간을 줄일 뿐 LCP를 개선하지 않습니다.
+LCP(Largest Contentful Paint)를 개선하기 위해 이미지 최적화도 중요합니다. 이미지 최적화의 방법으로 이미지 파일 크기를 압축하거나 `AVIF` 또는 `WebP`와 같은 포맷으로 변경하는 것은 이미지 파일 크기를 줄일 수 있지만, 이는 리소스 로드 시간을 줄일 뿐 LCP를 개선하지 않습니다.
 
 ```jsx
 import React from 'react';
@@ -204,6 +204,95 @@ location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
 ```
 
 > `Webpack`, `Next.js` 등의 도구에 대한 추가 설정과 최적화가 필요할 수 있으며, 성능 측정과 분석을 통해 지속적으로 개선해야 합니다.
+  
+### 개선 방안6: 중요 자산 미리 로드
+
+LCP(Largest Contentful Paint)의 로딩 속도를 향상시키기 위해 중요 자산을 미리 로드(preload)하는 것은 웹 페이지의 성능 최적화에 있어 중요한 전략 중 하나라고 할 수 있습니다. 중요 자산을 미리 로드하는 것은 브라우저가 페이지를 렌더링할 때 필요한 핵심 파일을 우선적으로 다운로드하도록 지시합니다. 이러한 자산에는 CSS, JavaScript 파일, 폰트, 이미지 등이 포함될 수 있습니다.
+
+1. **`Helmet` 라이브러리 사용하기**: `react-helmet`은 React 컴포넌트의 `<head>`를 수정할 수 있게 해주는 라이브러리입니다. 이를 사용하여 동적으로 `preload` 링크를 추가할 수 있습니다.
+
+  ```jsx
+  import { Helmet } from 'react-helmet';
+
+  function MyComponent() {
+    return (
+      <>
+        <Helmet>
+          <link rel="preload" href="/path/to/asset.css" as="style" />
+          <link rel="preload" href="/path/to/font.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+        </Helmet>
+        {/* 컴포넌트의 나머지 부분 */}
+      </>
+    );
+  }
+  ```
+
+2. **서버 사이드 렌더링을 사용하는 경우**: 서버 사이드 렌더링(SSR)을 사용하는 경우, 초기 페이지 로드 시 서버에서 생성된 HTML이 브라우저로 전송됩니다. 이 때, 중요 자산을 미리 로드하도록 `<link rel="preload"> `태그를 HTML 문서의 `<head>` 부분에 추가할 수 있습니다. 이렇게 하면 브라우저가 문서를 받은 직후에 지정된 자산을 다운로드하기 시작할 수 있습니다.
+
+    ```jsx
+    import Document, { Html, Head, Main, NextScript } from 'next/document';
+
+    class MyDocument extends Document {
+      render() {
+        return (
+          <Html>
+            <Head>
+              {/* 다른 메타 태그나 링크 태그들 */}
+              <link
+                rel="preload"
+                href="/path/to/your/asset.css"
+                as="style"
+              />
+              <link
+                rel="preload"
+                href="/path/to/your/font.woff2"
+                as="font"
+                type="font/woff2"
+                crossOrigin="anonymous"
+              />
+              {/* 기타 필요한 preload 링크들 */}
+            </Head>
+            <body>
+              <Main />
+              <NextScript />
+            </body>
+          </Html>
+        );
+      }
+    }
+
+    export default MyDocument;
+    ```
+
+    이 코드에서 `<Head>` 컴포넌트 안에 `preload` 링크들을 추가하여, 필요한 CSS 파일과 폰트 파일을 미리 로드하도록 지시하고 있습니다. `crossOrigin="anonymous"` 속성은 `CORS(Cross-Origin Resource Sharing)` 정책을 준수하는 자원에 대해 필요할 수 있습니다.
+
+    SSR 환경에서는 이러한 설정이 매우 중요합니다. 왜냐하면 사용자가 처음 페이지를 방문했을 때 서버로부터 받는 초기 HTML에 이러한 자산들이 미리 선언되어 있어야, 클라이언트 측 JavaScript가 실행되기 전에 브라우저가 중요 자산을 다운로드하기 시작할 수 있기 때문입니다.
+
+3. **`Custom Hook` 사용하기**: React에서는 `custom hook`을 만들어 로직을 재사용할 수 있습니다. 예를 들어, `usePreload` 훅을 만들어 특정 자산을 `preload` 할 수 있습니다.
+
+    ```jsx
+    import { useEffect } from 'react';
+
+    function usePreload(href, as) {
+      useEffect(() => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = href;
+        link.as = as;ㅋ
+        document.head.appendChild(link);
+
+        return () => {
+          document.head.removeChild(link);
+        };
+      }, [href, as]);
+    }
+
+    // 컴포넌트 안에서 사용 예
+    function MyComponent() {
+      usePreload('/path/to/asset.css', 'style');
+      // 컴포넌트의 나머지 부분
+    }
+    ```
 
 <br>
 
