@@ -7,10 +7,11 @@
     - [`DocumentContentLoaded` 이벤트와 `IntersectionObserver` API 그리고 LCP](#documentcontentloaded-이벤트와-intersectionobserver-api-그리고-lcp)
       - [`DocumentContentLoaded` 이벤트](#documentcontentloaded-이벤트)
       - [`IntersectionObserver`](#intersectionobserver)
-    - [개선 방안](#개선-방안)
-      - [텍스트는 언제나 옳다](#텍스트는-언제나-옳다)
-      - [이미지는 어떻게 불러올 것인가](#이미지는-어떻게-불러올-것인가)
-      - [그 밖의 조심해야할 사항](#그-밖의-조심해야할-사항)
+    - [개선 방안1: 코드 스플리팅](#개선-방안1-코드-스플리팅)
+    - [개선 방안2: 이미지 최적화](#개선-방안2-이미지-최적화)
+    - [개선 방안3: 서버 사이드 렌더링(SSR) 또는 정적 사이트 생성(SSG)](#개선-방안3-서버-사이드-렌더링ssr-또는-정적-사이트-생성ssg)
+    - [개선 방안4: 자바스크립트 및 CSS 최적화](#개선-방안4-자바스크립트-및-css-최적화)
+    - [개선 방안5: 캐싱 전략](#개선-방안5-캐싱-전략)
   - [12.4 최초 입력 지연(FID)](#124-최초-입력-지연fid)
     - [12.4.1 정의](#1241-정의)
     - [12.4.2 의미](#1242-의미)
@@ -25,6 +26,7 @@
     - [12.5.5 개선 방안](#1255-개선-방안)
     - [12.5.6 핵심 웹 지표는 아니지만 성능 확인에 중요한 지표들](#1256-핵심-웹-지표는-아니지만-성능-확인에-중요한-지표들)
   - [12.6 정리](#126-정리)
+  - [References](#references)
 
 <br>
 
@@ -54,6 +56,10 @@ LCP는 'Largest Contentful Paint'의 약자로, 사용자가 페이지에 처음
 
 웹사이트 개발자나 소유자는 LCP를 개선하기 위해 이미지 최적화, 서버 응답 시간 단축, 클라이언트-사이드 렌더링 최적화, CSS 및 자바스크립트의 효율적인 로딩 등 다양한 방법을 모색할 수 있습니다.
 
+LCP 리소스가 얼마나 빨리 로드될 수 있는지에 영향을 미치는 두 가지 요소:
+1. 리소스가 발견된 시점.
+2. 리소스에 할당된 우선 순위.
+
 ### `DocumentContentLoaded` 이벤트와 `IntersectionObserver` API 그리고 LCP
 
 `DocumentContentLoaded` 이벤트와 `IntersectionObserver` API는 직접적으로 LCP를 측정하지는 않지만, 웹 페이지의 로딩 성능과 사용자 경험을 개선하는 데 중요한 역할을 하여 간접적으로 LCP에 영향을 미칩니다.
@@ -66,14 +72,138 @@ LCP는 'Largest Contentful Paint'의 약자로, 사용자가 페이지에 처음
 #### `IntersectionObserver`
 `IntersectionObserver` API는 웹 개발자가 웹페이지의 특정 요소가 뷰포트에 들어오거나 나갈 때 비동기적으로 알림을 받을 수 있게 해주는 기능입니다. 이 API를 사용하면, 리소스를 게으른 로딩(lazy loading)하는 등의 최적화를 통해 성능을 향상시킬 수 있습니다.
 
-LCP와의 관계에서 `IntersectionObserver`는 페이지의 가장 큰 콘텐츠 요소가 사용자의 뷰포트에 어떻게 진입하는지 감시하고, 불필요한 리소스 로드를 피함으로써 LCP를 개선할 수 있는 기회를 제공합니다. 예를 들어, 사용자가 스크롤하지 않은 페이지 하단에 있는 큰 이미지는 `IntersectionObserver`를 사용하여 사용자가 해당 이미지에 도달할 때까지 로드하지 않도록 설정할 수 있습니다. 이러한 게으른 로딩은 초기 로드 시간을 단축시켜 LCP를 개선하는 데 도움이 됩니다.
+LCP와의 관계에서 `IntersectionObserver`는 페이지의 가장 큰 콘텐츠 요소가 사용자의 뷰포트에 어떻게 진입하는지 감시하고, 불필요한 리소스 로드를 피함으로써 LCP를 개선할 수 있는 기회를 제공합니다. 예를 들어, 사용자가 스크롤하지 않은 페이지 하단에 있는 큰 이미지는 `IntersectionObserver`를 사용하여 사용자가 해당 이미지에 도달할 때까지 로드하지 않도록 설정할 수 있습니다. 이러한 게으른 로딩(Lazy Loading)은 초기 로드 시간을 단축시켜 LCP를 개선하는 데 도움이 됩니다.
 
-### 개선 방안
+### 개선 방안1: 코드 스플리팅
+LCP(Largest Contentful Paint)를 개선하기 위해 React 애플리케이션에서 코드 스플리팅을 사용하는 것은 성능 최적화의 중요한 방법 중 하나입니다. 코드 스플리팅을 통해 불필요한 코드 로딩을 줄이고 사용자에게 필요한 코드만 우선적으로 로드하여 초기 로딩 시간을 단축시킬 수 있습니다.
 
-#### 텍스트는 언제나 옳다
-#### 이미지는 어떻게 불러올 것인가
-#### 그 밖의 조심해야할 사항
+1. **`React.lazy`와 `Suspense` 활용**: `React.lazy` 함수를 사용하면 동적으로 컴포넌트를 불러올 수 있으며, `Suspense` 컴포넌트를 사용하여 로딩 상태를 처리할 수 있습니다.
 
+   ```jsx
+   import React, { Suspense } from 'react';
+
+   const HeavyComponent = React.lazy(() => import('./HeavyComponent'));
+
+   function MyComponent() {
+     return (
+       <Suspense fallback={<div>로딩 중...</div>}>
+         <HeavyComponent />
+       </Suspense>
+     );
+   }
+   ```
+
+2. **Route-based splitting**: 페이지 또는 라우트 기반으로 코드를 분할하는 것입니다. 이 방법은 사용자가 현재 필요로 하는 라우트의 코드만 로드하기 때문에 효과적입니다.
+
+   ```jsx
+   // React Router와 함께 사용
+   import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+   import React, { Suspense, lazy } from 'react';
+
+   const Home = lazy(() => import('./routes/Home'));
+   const About = lazy(() => import('./routes/About'));
+
+   const App = () => (
+     <Router>
+       <Suspense fallback={<div>로딩 중...</div>}>
+         <Switch>
+           <Route exact path="/" component={Home}/>
+           <Route path="/about" component={About}/>
+         </Switch>
+       </Suspense>
+     </Router>
+   );
+   ```
+
+3. **Webpack의 Magic Comments**: `Webpack`을 사용하는 경우, `Magic Comments`를 활용하여 청크 이름을 지정하고, 프리로드 또는 프리패치 설정을 할 수 있습니다.
+
+   ```jsx
+   import(/* webpackChunkName: "my-chunk-name" */ './myComponent').then(({ MyComponent }) => {
+       // 사용할 컴포넌트 로드 완료
+   });
+   ```
+
+코드 스플리팅을 적절히 구현하면 LCP를 포함한 다양한 성능 지표가 개선될 수 있습니다. 하지만 모든 컴포넌트나 모듈을 분할하는 것이 항상 좋은 것은 아니므로, 실제 애플리케이션의 로딩 성능을 분석하고 가장 크기가 크고 중요도가 높은 부분부터 분할하는 것이 좋습니다.
+
+### 개선 방안2: 이미지 최적화
+LCP(Largest Contentful Paint)를 개선하기 위해 이미지 최적화도 중요합니다.
+이미지 최적화의 방법으로 이미지 파일 크기를 압축하거나 `AVIF` 또는 `WebP`와 같은 포맷으로 변경하는 것은 이미지 파일 크기를 줄일 수 있지만, 이는 리소스 로드 시간을 줄일 뿐 LCP를 개선하지 않습니다.
+
+```jsx
+import React from 'react';
+
+function ImageComponent() {
+  return (
+    <img
+      src="example-small.jpg"
+      // srcSet 과 sizes 속성을 사용하여 다양한 해상도를 가진 디바이스에 맞는 적절한 크기의 이미지를 제공합니다.
+      srcSet="example-small.jpg 300w, example-medium.jpg 768w, example-large.jpg 1200w"
+      sizes="(max-width: 300px) 100vw, (max-width: 768px) 50vw, 25vw"
+      alt="예제 이미지"
+      // loading="lazy" 속성은 브라우저가 지원하는 경우 이미지의 로딩을 지연시키도록 합니다.
+      loading="lazy"
+      // 이미지의 실제 표시 크기에 맞게 이미지를 리사이즈하여 사용합니다. 너무 큰 이미지는 불필요하게 로딩 시간을 증가시킬 수 있습니다.
+      width="200"
+      height="200"
+    />
+  );
+}
+```
+
+### 개선 방안3: 서버 사이드 렌더링(SSR) 또는 정적 사이트 생성(SSG)
+`Next.js`를 사용하여 `SSR` 또는 `SSG`를 구현합니다. `Next.js`는 기본적으로 페이지를 사전에 렌더링합니다.
+
+```jsx
+// pages/index.js
+function HomePage({ posts }) {
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+
+export async function getStaticProps() {
+  const res = await fetch('https://api.example.com/posts');
+  const posts = await res.json();
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+
+export default HomePage;
+```
+
+### 개선 방안4: 자바스크립트 및 CSS 최적화
+`Webpack`, `vite`, `rollup`과 같은 모듈 번들러를 사용하여 트리 쉐이킹을 활용하고, 비동기 컴포넌트 로딩을 통해 자바스크립트와 `CSS`를 최적화합니다.
+
+```jsx
+// Webpack의 경우, production 모드에서 자동으로 트리 쉐이킹을 수행합니다.
+// package.json
+{
+  "scripts": {
+    "build": "webpack --mode production"
+  }
+}
+```
+
+### 개선 방안5: 캐싱 전략
+서버나 CDN 설정을 통해 캐싱 전략을 구현합니다. 예를 들어, `Cache-Control` 헤더를 설정할 수 있습니다.
+
+```bash
+# Nginx 설정 예시
+location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+    expires 30d;
+    add_header Cache-Control "public, no-transform";
+}
+```
+
+> `Webpack`, `Next.js` 등의 도구에 대한 추가 설정과 최적화가 필요할 수 있으며, 성능 측정과 분석을 통해 지속적으로 개선해야 합니다.
 
 <br>
 
@@ -97,3 +227,8 @@ LCP와의 관계에서 `IntersectionObserver`는 페이지의 가장 큰 콘텐�
 <br>
 
 ## 12.6 정리
+
+<br>
+
+## References
+- [Optimizing performance](https://legacy.reactjs.org/docs/optimizing-performance.html#profiling-components-with-the-chrome-performance-tab)
