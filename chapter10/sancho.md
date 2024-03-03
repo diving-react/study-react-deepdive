@@ -16,12 +16,50 @@
 - [ ] 10.1.4 그 밖의 주요 변경 사항
 - [ ] 10.1.5 정리
 
-<br>
+<br> 
 
 ## 10.2 리액트 18 버전 살펴보기
 
-- [ ] 10.2.1 새로 추가된 훅 살펴보기
+- [] 10.2.1 새로 추가된 훅 살펴보기
+#### useId
+컴포넌트별로 유니크한 값을 생성하는 새로운 훅
+
+```
+function Child(){
+  const id = useId()
+  return <div>child:{id}</div>
+}
+```
+
+#### useTransition
+UI 변경을 가로막지 않고 상태를 업데이트할 수 있는 리액트 훅
+
+활용하면 상태를 업데이트를 긴급하지 않은 것으로 간주해 무거운 렌더링 작업을 조금 더 미뤄 사용자에게 조금 더 나은 사용자 경험을 제공
+
+주의점 
+* startTransition 내부에는 반드시 setState와 같은 상태를 업데이트하는 함수와 관련된 작업만 가능
+* startTransition 으로 넘겨주는 함수는 반드시 동기함수여야 한다.
+
+#### useDeferredValue
+
+리액트 컴포넌트 트리에서 리렌더링이 급하지 않은 부분을 지연할 수 있게 도와주는 훅
+
+특정 시간 동안 발생하는 이벤트를 하나로 인식해 한 번만 실행하게 해주는 디바운스와 비슷하지만 디바운스 대비 useDeferredValue만이 가진 장점이 몇 가지 있다.
+
+* 디바운스와 다르게 고정된 지연시간이 필요없음
+
+
+useTransition와 useDeferredValue 차이점
+* useTransition 함수를 감싸서 사용
+* useDeferredValue는 state 값 자체만을 감싸서 사용
+
+공통점은 둘 다 지연된 렌더링을 한다
+
+#### useDeferredValue
+
 - [ ] 10.2.2 react-dom/client
+
+
 - [ ] 10.2.3 react-dom/server
 - [ ] 10.2.4 자동 배치(Automatic Batching)
 - [ ] 10.2.5 더욱 엄격해진 엄격 모드
