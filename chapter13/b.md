@@ -218,6 +218,7 @@ Next.js에는 성능 지표를 측정하고 보고하는 기능이 내장되어 
 - [Next.js, Optimizing/Analytics](https://nextjs.org/docs/pages/building-your-application/optimizing/analytics)
 - [Next.js, `useReportWebVitals`](https://nextjs.org/docs/pages/api-reference/functions/use-report-web-vitals)
 - [Next.js, webVitalsAttribution](https://nextjs.org/docs/pages/api-reference/next-config-js/webVitalsAttribution)
+- [MDN, Performance APIs](https://developer.mozilla.org/en-US/docs/Web/API/Performance_API)
 
 <br>
 
