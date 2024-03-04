@@ -11,6 +11,8 @@
       - [CRA에서 `reportWebVitals` 함수를 사용하는 예2: Google Analytics(GA)를 사용하여 웹 성능 지표를 기록](#cra에서-reportwebvitals-함수를-사용하는-예2-google-analyticsga를-사용하여-웹-성능-지표를-기록)
       - [참고](#참고)
     - [13.1.2 `create-next-app`](#1312-create-next-app)
+      - [`NextWebVitalmetrics`](#nextwebvitalmetrics)
+      - [`useReportWebVitals`](#usereportwebvitals)
       - [참고](#참고-1)
   - [13.2 구글 라이트하우스](#132-구글-라이트하우스)
     - [13.2.1 구글 라이트하우스-탐색 모드](#1321-구글-라이트하우스-탐색-모드)
@@ -204,11 +206,18 @@ reportWebVitals(reportWebVitals);
 
 ### 13.1.2 `create-next-app`
 
+Next.js에는 성능 지표를 측정하고 보고하는 기능이 내장되어 있습니다. `useReportWebVitals` 훅을 사용하여 직접 보고를 관리할 수도 있고, Vercel은 자동으로 지표를 수집하고 시각화해주는 관리형 [서비스](https://vercel.com/analytics)도 제공합니다. 이를 통해 웹 애플리케이션의 성능을 모니터링하고 최적화할 수 있습니다.
+
+#### `NextWebVitalmetrics`
+
+#### `useReportWebVitals`
+
 
 #### 참고
 
 - [Next.js, Optimizing/Analytics](https://nextjs.org/docs/pages/building-your-application/optimizing/analytics)
 - [Next.js, `useReportWebVitals`](https://nextjs.org/docs/pages/api-reference/functions/use-report-web-vitals)
+- [Next.js, webVitalsAttribution](https://nextjs.org/docs/pages/api-reference/next-config-js/webVitalsAttribution)
 
 <br>
 
