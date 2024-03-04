@@ -11,6 +11,7 @@
       - [CRA에서 `reportWebVitals` 함수를 사용하는 예2: Google Analytics(GA)를 사용하여 웹 성능 지표를 기록](#cra에서-reportwebvitals-함수를-사용하는-예2-google-analyticsga를-사용하여-웹-성능-지표를-기록)
       - [참고](#참고)
     - [13.1.2 `create-next-app`](#1312-create-next-app)
+      - [참고](#참고-1)
   - [13.2 구글 라이트하우스](#132-구글-라이트하우스)
     - [13.2.1 구글 라이트하우스-탐색 모드](#1321-구글-라이트하우스-탐색-모드)
     - [13.2.2 구글 라이트하우스-기간 모드](#1322-구글-라이트하우스-기간-모드)
@@ -202,6 +203,12 @@ reportWebVitals(reportWebVitals);
 
 
 ### 13.1.2 `create-next-app`
+
+
+#### 참고
+
+- [Next.js, Optimizing/Analytics](https://nextjs.org/docs/pages/building-your-application/optimizing/analytics)
+- [Next.js, `useReportWebVitals`](https://nextjs.org/docs/pages/api-reference/functions/use-report-web-vitals)
 
 <br>
 
