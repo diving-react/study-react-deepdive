@@ -11,7 +11,8 @@
       - [CRA에서 `reportWebVitals` 함수를 사용하는 예2: Google Analytics(GA)를 사용하여 웹 성능 지표를 기록](#cra에서-reportwebvitals-함수를-사용하는-예2-google-analyticsga를-사용하여-웹-성능-지표를-기록)
       - [참고](#참고)
     - [13.1.2 `create-next-app`](#1312-create-next-app)
-      - [`NextWebVitalmetrics`](#nextwebvitalmetrics)
+      - [`NextWebVitalMetrics`](#nextwebvitalmetrics)
+      - [사용자 정의 메트릭스](#사용자-정의-메트릭스)
       - [`useReportWebVitals`](#usereportwebvitals)
       - [참고](#참고-1)
   - [13.2 구글 라이트하우스](#132-구글-라이트하우스)
@@ -208,9 +209,101 @@ reportWebVitals(reportWebVitals);
 
 Next.js에는 성능 지표를 측정하고 보고하는 기능이 내장되어 있습니다. `useReportWebVitals` 훅을 사용하여 직접 보고를 관리할 수도 있고, Vercel은 자동으로 지표를 수집하고 시각화해주는 관리형 [서비스](https://vercel.com/analytics)도 제공합니다. 이를 통해 웹 애플리케이션의 성능을 모니터링하고 최적화할 수 있습니다.
 
-#### `NextWebVitalmetrics`
+#### `NextWebVitalMetrics`
+
+```ts
+// pages/_app.tsx
+import { AppProps } from 'next/app';
+import { NextWebVitalsMetric } from 'next/app';
+
+export function reportWebVitals(metric: NextWebVitalsMetric): void {
+  // 메트릭 객체의 내용을 분석하고 처리합니다.
+  const { id, name, label, value } = metric;
+  console.log(`Metric ${name}: ${value}`, metric);
+
+  // 선택적: 분석 서비스로 메트릭 전송
+  // 예를 들어, Google Analytics로 메트릭을 보낼 수 있습니다.
+  // gtag('event', name, {
+  //   event_category: label === 'web-vital' ? 'Web Vitals' : 'Next.js custom metrics',
+  //   value: Math.round(name === 'CLS' ? value * 1000 : value), // CLS는 1,000으로 곱해야 합니다.
+  //   event_label: id,
+  //   non_interaction: true, // 이 이벤트가 사용자 상호작용을 유발하지 않았음을 나타냅니다.
+  // });
+}
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+}
+
+export default MyApp;
+```
+
+`NextWebVitalsMetric` 타입은 캡처된 성능 메트릭스의 데이터 구조를 정의합니다.
+
+- `id`: 메트릭의 고유 식별자
+- `name`: 메트릭의 이름 (FCP, LCP, CLS, FID, TTFB 등)
+- `label`: 메트릭의 유형 (web-vital 또는 custom)
+- `value`: 메트릭의 측정값 (대부분 밀리초 단위)
+- `startTime`: 측정이 시작된 시간
+
+#### 사용자 정의 메트릭스
+
+기본 메트릭스 외에도, 페이지가 하이드레이션과 렌더링을 완료하는 데 걸리는 시간을 측정하는 몇 가지 추가적인 사용자 정의 메트릭스가 있습니다. 이러한 메트릭스는 Next.js 애플리케이션의 성능을 더 세밀하게 분석하는 데 도움이 됩니다.
+
+- `Next.js-hydration`: 페이지가 하이드레이션을 시작하고 완료하는 데 걸리는 시간의 길이(밀리초 단위).
+- `Next.js-route-change-to-render`: 경로 변경 후 페이지가 렌더링을 시작하는 데 걸리는 시간의 길이(밀리초 단위).
+- `Next.js-render`: 경로 변경 후 페이지가 렌더링을 완료하는 데 걸리는 시간의 길이(밀리초 단위).
+
+```tsx
+export function reportWebVitals(metric) {
+  switch (metric.name) {
+    case 'Next.js-hydration':
+      // 하이드레이션 결과 처리
+      console.log(`Hydration time: ${metric.value}ms`);
+      break;
+    case 'Next.js-route-change-to-render':
+      // 라우트 변경 후 렌더 결과 처리
+      console.log(`Time to start render after route change: ${metric.value}ms`);
+      break;
+    case 'Next.js-render':
+      // 렌더 결과 처리
+      console.log(`Render time after route change: ${metric.value}ms`);
+      break;
+    default:
+      // 다른 메트릭스 처리
+      console.log(`Metric ${metric.name}: ${metric.value}`);
+      break;
+  }
+}
+```
+
+> `reportWebVitals` 함수는 Next.js 애플리케이션의 성능 메트릭을 측정하고 처리하는 데 사용됩니다. 이 함수는 `NextWebVitalsMetric` 타입의 인수를 받아서, 각 메트릭의 이름, 레이블, 값 등을 분석하고 처리합니다. 이 함수를 사용하여 성능 메트릭을 분석하고, 분석 결과를 분석 서비스로 전송할 수도 있습니다.
+
 
 #### `useReportWebVitals`
+
+`useReportWebVitals`는 성능 메트릭스 데이터를 인자로 받는 콜백 함수를 매개변수로 사용합니다. 이 콜백 함수 내에서 개발자는 캡처된 성능 메트릭스를 처리하고, 필요한 경우 분석 서비스로 전송하는 로직을 구현할 수 있습니다.
+
+```tsx
+// pages/_app.js
+import { useReportWebVitals } from 'next/web-vitals';
+
+function MyApp({ Component, pageProps }) {
+  useReportWebVitals(metric => {
+    // 여기에서 메트릭 처리 로직을 구현합니다.
+    console.log(metric);
+  });
+
+  return <Component {...pageProps} />;
+}
+```
+
+**매개변수**
+- `metric`: 캡처된 성능 메트릭스 정보를 담고 있는 객체입니다. metric 객체는 다음과 같은 주요 속성을 포함합니다`:
+- `id`: 메트릭의 고유 식별자입니다.
+- `name`: 메트릭의 이름을 나타냅니다. 예를 들어, FCP, LCP, CLS, FID 등입니다.
+- `label`: 메트릭이 'web-vital'인지 아니면 'custom'인지를 나타냅니다.
+- `value`: 메트릭의 측정값입니다. 대부분 밀리초 단위로 제공됩니다.
 
 
 #### 참고
