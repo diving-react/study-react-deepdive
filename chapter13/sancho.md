@@ -8,24 +8,30 @@
     - [13.1.2 create-next-app](#1312-create-next-app)
   - [13.2 구글 라이트하우스](#132-구글-라이트하우스)
     - [13.2.1 구글 라이트하우스-탐색 모드](#1321-구글-라이트하우스-탐색-모드)
+      - [성능](#성능)
+      - [접근성](#접근성)
+      - [권장사항](#권장사항)
     - [13.2.2 구글 라이트하우스-기간 모드](#1322-구글-라이트하우스-기간-모드)
+      - [흔적](#흔적)
+      - [트리맵](#트리맵)
     - [13.2.3 구글 라이트하우스-스냅샷](#1323-구글-라이트하우스-스냅샷)
-  - [13.3 WebPageTest](#133-WebPageTest)
-    - [13.3.1 Performance Summary](#1331-Performance-Summary)
-    - [13.3.2 Opportunities & Experiments](#1332-Opportunities-&-Experiments)
-    - [13.3.3 Filmstrip](#1333-Filmstrip)
-    - [13.3.4 Details](#1334-Details)
-    - [13.3.5 Vitals](#1335-Vitals)
-    - [13.3.6 Optimizations](#1336-Optimizations)
-    - [13.3.7 Content](#1337-Content)
-    - [13.3.8 Domains](#1338-Domains)
-    - [13.3.9 Console Log](#1339-Console-Log)
-    - [13.3.10 Detected Technologies](#13310-Detected-Technologies)
-    - [13.3.11 Main-thread Processing](#13311-Main-thread-Processing)
-    - [13.3.12 Lighthouse Report](#13312-Lighthouse-Report)
+  - [13.3 WebPageTest](#133-webpagetest)
+    - [13.3.1 Performance Summary](#1331-performance-summary)
+    - [13.3.2 Opportunities \& Experiments](#1332-opportunities--experiments)
+    - [13.3.3 Filmstrip](#1333-filmstrip)
+    - [13.3.4 Details](#1334-details)
+    - [13.3.5 Vitals](#1335-vitals)
+    - [13.3.6 Optimizations](#1336-optimizations)
+    - [13.3.7 Content](#1337-content)
+    - [13.3.8 Domains](#1338-domains)
+    - [13.3.9 Console Log](#1339-console-log)
+    - [13.3.10 Detected Technologies](#13310-detected-technologies)
+    - [13.3.11 Main-thread Processing](#13311-main-thread-processing)
+    - [13.3.12 Lighthouse Report](#13312-lighthouse-report)
     - [13.3.13 기타](#13313-기타)
   - [13.4 크롬 개발자 도구](#134-크롬-개발자-도구)
     - [13.4.1 성능 통계](#1341-성능-통계)
+      - [Insights](#insights)
     - [13.4.2 성능](#1342-성능)
   - [13.5 정리](#135-정리)
 
@@ -35,21 +41,76 @@
 
 ### 13.1.1 create-react-app
 
+reportWebVitals 함수는 웹에서 성능을 측정하기 위한 함수다.
+지표의 측정을 가능하게 하는 것은 web-vitals라이브러리 덕분
+브라우저의 웹페이지 성능을 측정할 수 있는 이유는 PerformanceObserver라는 API를 사용하기에 가능
+반대로 이 API를 제공하지 않는 브라우저는 성능을 측정하기 어려움
+![alt text](image.png)
+
 ### 13.1.2 create-next-app
 
 <br>
 
 ## 13.2 구글 라이트하우스
 
+구글에서 제공하는 웹페이지 성능 측정 도구
+
 ### 13.2.1 구글 라이트하우스-탐색 모드
+
+페이지에 접속했을 때부터 페이지 로딩이 완료될 때까지의 성능을 측정하는 모드
+핵심 웹 지표인 최초 콘텐츠풀 페인트(FCP), 최대 콘텐츠풀 페인트(LCP), 누적 레이아웃 이동(CLS) 외에도 추가적인 지표
+
+#### 성능
+
+웹페이지의 성능과 관련된 지표를 확인할 수 있는 영역
+
+- Time to Interactive: 페이지에서 사용자가 완전히 상호작용 할 수 있을 까지 걸리는 시간을 측정
+  - 구글에서는 TTI 지표가 3.8초 이내면 좋음, 7.3초 이내면 보통
+- Speed Index: 페이지가 로드되는 동안 콘텐츠가 얼마나 빨리 시각적으로 표시되는 지를 계산
+  - 구글에서는 3.4초 이내면 좋음, 5.8초 이내면 보통
+- Total Blocking Time: 메인 스레드에서 특정 시간 이상 실행되는 작업, 즉 긴 작업이 수행될 때마다 메인 스레드가 차단된 것으로 간주한다.
+
+#### 접근성
+
+장애인 및 고령자 등 신체적으로 불편한 사람들이 일반적인 사용자와 동등하게 웹페이지를 이용할 수 있도록 보장하는 것
+
+#### 권장사항
+
+웹사이트 개발할 때 고려해야 할 요소들
 
 ### 13.2.2 구글 라이트하우스-기간 모드
 
+실제 웹페이지를 탐색하는 동안 지표를 측정하는 것
+
+여기서 확인할 수 있는 지표는 크게 성능과 권장사항으로, 앞서 탐색 모드와 크게 다르지 않다.
+
+#### 흔적
+
+웹 성능을 추적한 기간을 성능 탭에서 보여줌
+
+#### 트리맵
+
+페이지를 불러올 때 함께 로딩한 모든 리소스를 함께 모아서 볼 수 있는 곳이다.
+과도하게 큰 리소스나 혹은 사용하지 않은 바이트의 비중이 큰 리소스는 한 번쯤 눈여겨 보는 것이 좋다.
+
 ### 13.2.3 구글 라이트하우스-스냅샷
 
+스냅샷 모드는 탐색 모드와 매우 유사하지만 현재 페이지 상태를 기준으로 분석한다는 점이 다르다.
+페이지 로딩이 아닌 특정 페이지의 특정 상태를 기준으로 분석하고 싶다면 스냅샷 모드를 사용하면 된다.
 <br>
 
 ## 13.3 WebPageTest
+
+웹사이트 성능을 분석하는 도구로 가장 널리 알려진 도구
+제공하는 분석 도구는 크게 다섯 가지
+
+- Site Performance: 웹사이트의 성능을 분석을 위한 도구
+- Core Web Vitals: 웹사이트의 핵심 웹 지표를 확인하기 위한 도구
+- Lighthouse: 구글 라이트하우스 도구
+- Visual Comparison: 2개 이상의 사이트를 동시에 실행해 시간의 흐름에 따른 로딩과정을 비교하는 도구
+- Traceroute: 네트워크 경로를 확인하는 도구
+
+한국 어느정도 거리가 먼 서버를 기준으로 테스트하기 때문에 앞서 크롬 개발자 도구에서 테스트 했을 때 보다 성능 지표가 좋지 않을 가능성이 매우 높다.
 
 ### 13.3.1 Performance Summary
 
@@ -81,7 +142,21 @@
 
 ## 13.4 크롬 개발자 도구
 
+개발된 지 오래된 웹사이트이거나 혹은 개발자와 운영자가 다른 경우, 혹은 번들만으로 정확한 문제가 짐작이 되지 않을 경우 문제르 더 자세하게 들여다 볼 필요가 있다.
+
+이때 사용할 수 있는 도구가 크롬 개발자도구다.
+크롬 개발자도구을 활용하기 위해서는 시크릿 창으로 웹사이트를 여는 것이 좋다.
+일반 창모드에서는 확장 프로그램으로 인해 성능 이슈를 파악하는데 방해가 될 수 있음
+
 ### 13.4.1 성능 통계
+
+#### Insights
+
+성능을 측정하는 기간 동안 발생한 이벤트 중 눈여겨봐야 할 내용
+
+- 핵심 웹지표
+- Performance Measure: User Timing API로 측정한 지표를 확인 할 수 있다.
+- Long Task: 가장 주목해야 할 것 중 하나, 메인 스레드에서 실행되는 데 오랜 시간으로 분류된 긴 작업을 의미
 
 ### 13.4.2 성능
 
