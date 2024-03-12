@@ -523,54 +523,48 @@ sudo systemctl reload nginx
 
 1. **Strict-Transport-Security (HSTS)**:
    이 헤더는 웹사이트가 HTTPS를 통해서만 접속되어야 함을 브라우저에 지시합니다.
-   - 웹 서버 설정에 다음과 같이 추가합니다:
-     ```
-     Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-     ```
+   ```
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    ```
    - `max-age`는 브라우저가 헤더를 기억하는 시간을 초단위로 설정합니다.
    - `includeSubDomains`는 모든 서브도메인에 대해서도 이 정책을 적용하겠다는 것을 의미합니다.
    - `preload`는 브라우저의 사전로드 목록에 포함시키려면 이 옵션을 사용합니다.
 
 2. **Content-Security-Policy (CSP)**:
    CSP는 웹사이트에서 실행할 수 있는 스크립트나 스타일 등의 자원을 제한하는 역할을 합니다.
-   - 예를 들어, 다음과 같이 설정할 수 있습니다:
-     ```
-     Content-Security-Policy: default-src 'self'; script-src 'self' https://trustedscripts.example.com; object-src 'none';
-     ```
+    ```
+    Content-Security-Policy: default-src 'self'; script-src 'self' https://trustedscripts.example.com; object-src 'none';
+    ```
    - `'self'`는 동일 출처의 자원만 허용한다는 것을 의미합니다.
    - `script-src`는 스크립트가 로드될 수 있는 출처를 지정합니다.
    - `object-src 'none'`은 `<object>`, `<embed>`, `<applet>` 태그를 사용하지 않겠다는 것입니다.
 
 3. **X-Frame-Options**:
    이 헤더는 클릭재킹 공격을 방지하기 위해 사용됩니다.
-   - 웹 서버 설정에 다음과 같이 추가합니다:
-     ```
-     X-Frame-Options: DENY
-     ```
+    ```
+    X-Frame-Options: DENY
+    ```
    - `DENY`는 모든 프레이밍을 금지합니다. 대안으로 `SAMEORIGIN`을 사용할 수도 있으며, 이는 동일 출처의 프레임만 허용합니다.
 
 4. **X-Content-Type-Options**:
    이 헤더는 MIME 타입 스니핑을 방지하기 위해 사용됩니다.
-   - 서버 설정에 다음을 추가합니다:
-     ```
-     X-Content-Type-Options: nosniff
-     ```
+    ```
+    X-Content-Type-Options: nosniff
+    ```
    - `nosniff` 옵션은 브라우저가 MIME 타입을 추측하지 못하게 합니다.
 
 5. **Referrer-Policy**:
    이 헤더는 웹사이트가 다른 페이지로 넘어갈 때 참조 정보를 어떻게 전달할지를 결정합니다.
-   - 예를 들어, 다음과 같이 설정할 수 있습니다:
-     ```
-     Referrer-Policy: no-referrer
-     ```
+    ```
+    Referrer-Policy: no-referrer
+    ```
    - 여기서 `no-referrer`는 참조 정보를 전혀 전송하지 않겠다는 것입니다.
 
 6. **Permissions-Policy** (이전에 Feature-Policy):
    이 헤더는 브라우저 기능(예: 마이크, 카메라)의 사용을 제어할 수 있습니다.
-   - 예를 들어, 다음과 같이 설정할 수 있습니다:
-     ```
-     Permissions-Policy: geolocation=(self "https://example.com"), microphone=()
-     ```
+    ```
+    Permissions-Policy: geolocation=(self "https://example.com"), microphone=()
+    ```
    - 위 설정은 자신의 도메인과 "https://example.com"에서만 지리위치 정보를 사용할 수 있게 하고, 마이크 사용은 금지하는 것입니다.
 
 
