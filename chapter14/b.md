@@ -577,7 +577,7 @@ sudo systemctl reload nginx
 
 ## 14.6 `OWASP` Top 10
 
-오픈 소스 웹 어플리케이션 보안 프로젝트(OWASP)로 웹에서 발생할 수 잇는 정보로, [OWASP Top 10](https://owasp.org/www-project-top-ten/)은 Open Web Application Security Project의 주요 보안 위협을 나열한 리스트입니다. 이 리스트는 웹 응용 프로그램 보안에 대한 주요 위협을 식별하고 예방하기 위해 개발되었습니다. 이 목록에는 인젝션, 인증 및 세션 관리 문제, 민감한 데이터 노출 등이 포함되어 있습니다. OWASP Top 10 목록은 주기적으로 업데이트되므로 최신 버전을 확인하는 것이 중요합니다.
+오픈 소스 웹 어플리케이션 보안 프로젝트(OWASP)로 웹에서 발생할 수 잇는 정보로, [OWASP Top 10](https://owasp.org/www-project-top-ten/)은 Open Web Application Security Project의 주요 보안 위협을 나열한 리스트입니다.
 
 
 <br>
