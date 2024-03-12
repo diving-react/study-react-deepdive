@@ -36,11 +36,12 @@
     - [14.4.7 `Content-Security-Policy`](#1447-content-security-policy)
     - [14.4.8 보안 헤더 설정하기](#1448-보안-헤더-설정하기)
       - [Next.js에서 보안 헤더 설정하기](#nextjs에서-보안-헤더-설정하기)
-    - [1. Custom Server를 사용하는 방법](#1-custom-server를-사용하는-방법)
-    - [2. `next.config.js` 파일을 사용하는 방법](#2-nextconfigjs-파일을-사용하는-방법)
-    - [nginx 설정 파일에 보안 헤더 추가하기](#nginx-설정-파일에-보안-헤더-추가하기)
+      - [1. Custom Server를 사용하는 방법](#1-custom-server를-사용하는-방법)
+      - [2. `next.config.js` 파일을 사용하는 방법](#2-nextconfigjs-파일을-사용하는-방법)
+      - [nginx 설정 파일에 보안 헤더 추가하기](#nginx-설정-파일에-보안-헤더-추가하기)
       - [Nginx에서 보안 헤더를 설정하는 방법](#nginx에서-보안-헤더를-설정하는-방법)
     - [14.4.9 보안 헤더 확인하기](#1449-보안-헤더-확인하기)
+      - [보안 헤더 현황 확인: https://securityheaders.com/](#보안-헤더-현황-확인-httpssecurityheaderscom)
   - [14.5 취약점이 있는 패키지의 사용을 피하자](#145-취약점이-있는-패키지의-사용을-피하자)
   - [14.6 `OWASP` Top 10](#146-owasp-top-10)
   - [14.7 정리](#147-정리)
@@ -398,7 +399,7 @@ Permissions-Policy 헤더(과거에는 Feature-Policy로 알려져 있음)는 �
 
 Next.js에서 보안 헤더를 설정하는 방법은 여러 가지가 있지만, 일반적으로는 Next.js의 Custom Server 기능을 사용하거나, `next.config.js` 파일을 통해 설정하는 방법이 있습니다.
 
-### 1. Custom Server를 사용하는 방법
+#### 1. Custom Server를 사용하는 방법
 
 Custom Server를 사용하여 각 요청에 대한 응답에 보안 헤더를 추가할 수 있습니다. 예를 들어, Express.js를 사용하는 경우 다음과 같이 설정할 수 있습니다.
 
@@ -433,7 +434,8 @@ app.prepare().then(() => {
 });
 ```
 
-### 2. `next.config.js` 파일을 사용하는 방법
+#### 2. `next.config.js` 파일을 사용하는 방법
+
 Next.js 10 이상부터는 `next.config.js` 파일에 `async headers()` 함수를 추가하여 보안 헤더를 설정할 수 있습니다.
 
 ```jsx
@@ -459,9 +461,9 @@ module.exports = {
 
 이 설정은 빌드 타임에 적용되므로 서버를 재시작할 필요가 없고, 각 페이지에 대해 자동으로 적용됩니다.
 
-두 방법 모두 Next.js 애플리케이션에 보안 헤더를 추가하는 데 사용할 수 있으며, 프로젝트의 요구사항과 설정에 따라 적합한 방법을 선택하면 됩니다.
+> 위 두 방법 모두 Next.js 애플리케이션에 보안 헤더를 추가하는 데 사용할 수 있으며, 프로젝트의 요구사항과 설정에 따라 적합한 방법을 선택하면 됩니다.
 
-### nginx 설정 파일에 보안 헤더 추가하기
+#### nginx 설정 파일에 보안 헤더 추가하기
 
 Next.js 애플리케이션을 Nginx 서버 뒤에서 운영할 때 보안 헤더를 설정하는 것은 Nginx의 설정 파일을 통해 이루어집니다.
 이 경우, Nginx는 리버스 프록시로 동작하며 모든 HTTP(S) 요청을 Next.js 애플리케이션으로 전달하기 전에 보안 헤더를 추가할 수 있습니다.
@@ -503,7 +505,7 @@ server {
 }
 ```
 
-> CSP, X-Content-Type-Options, X-Frame-Options, HSTS, X-XSS-Protection 및 Permissions-Policy와 같은 여러 보안 헤더를 설정했습니다.
+> `CSP`, `X-Content-Type-Options`, `X-Frame-Options`, `HSTS`, `X-XSS-Protection` 및 `Permissions-Policy`와 같은 여러 보안 헤더를 설정했습니다.
 
 Nginx 설정을 변경한 후에는 항상 Nginx 구성을 테스트하고 서비스를 재시작하거나 다시 로드해야 합니다:
 
@@ -517,15 +519,72 @@ sudo systemctl reload nginx
 
 ### 14.4.9 보안 헤더 확인하기
 
-보안 헤더 현황 확인: https://securityheaders.com/
+#### 보안 헤더 현황 확인: https://securityheaders.com/
+
+1. **Strict-Transport-Security (HSTS)**:
+   이 헤더는 웹사이트가 HTTPS를 통해서만 접속되어야 함을 브라우저에 지시합니다.
+   - 웹 서버 설정에 다음과 같이 추가합니다:
+     ```
+     Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+     ```
+   - `max-age`는 브라우저가 헤더를 기억하는 시간을 초단위로 설정합니다.
+   - `includeSubDomains`는 모든 서브도메인에 대해서도 이 정책을 적용하겠다는 것을 의미합니다.
+   - `preload`는 브라우저의 사전로드 목록에 포함시키려면 이 옵션을 사용합니다.
+
+2. **Content-Security-Policy (CSP)**:
+   CSP는 웹사이트에서 실행할 수 있는 스크립트나 스타일 등의 자원을 제한하는 역할을 합니다.
+   - 예를 들어, 다음과 같이 설정할 수 있습니다:
+     ```
+     Content-Security-Policy: default-src 'self'; script-src 'self' https://trustedscripts.example.com; object-src 'none';
+     ```
+   - `'self'`는 동일 출처의 자원만 허용한다는 것을 의미합니다.
+   - `script-src`는 스크립트가 로드될 수 있는 출처를 지정합니다.
+   - `object-src 'none'`은 `<object>`, `<embed>`, `<applet>` 태그를 사용하지 않겠다는 것입니다.
+
+3. **X-Frame-Options**:
+   이 헤더는 클릭재킹 공격을 방지하기 위해 사용됩니다.
+   - 웹 서버 설정에 다음과 같이 추가합니다:
+     ```
+     X-Frame-Options: DENY
+     ```
+   - `DENY`는 모든 프레이밍을 금지합니다. 대안으로 `SAMEORIGIN`을 사용할 수도 있으며, 이는 동일 출처의 프레임만 허용합니다.
+
+4. **X-Content-Type-Options**:
+   이 헤더는 MIME 타입 스니핑을 방지하기 위해 사용됩니다.
+   - 서버 설정에 다음을 추가합니다:
+     ```
+     X-Content-Type-Options: nosniff
+     ```
+   - `nosniff` 옵션은 브라우저가 MIME 타입을 추측하지 못하게 합니다.
+
+5. **Referrer-Policy**:
+   이 헤더는 웹사이트가 다른 페이지로 넘어갈 때 참조 정보를 어떻게 전달할지를 결정합니다.
+   - 예를 들어, 다음과 같이 설정할 수 있습니다:
+     ```
+     Referrer-Policy: no-referrer
+     ```
+   - 여기서 `no-referrer`는 참조 정보를 전혀 전송하지 않겠다는 것입니다.
+
+6. **Permissions-Policy** (이전에 Feature-Policy):
+   이 헤더는 브라우저 기능(예: 마이크, 카메라)의 사용을 제어할 수 있습니다.
+   - 예를 들어, 다음과 같이 설정할 수 있습니다:
+     ```
+     Permissions-Policy: geolocation=(self "https://example.com"), microphone=()
+     ```
+   - 위 설정은 자신의 도메인과 "https://example.com"에서만 지리위치 정보를 사용할 수 있게 하고, 마이크 사용은 금지하는 것입니다.
+
 
 <br>
 
 ## 14.5 취약점이 있는 패키지의 사용을 피하자
 
+
 <br>
 
 ## 14.6 `OWASP` Top 10
+
+오픈 소스 웹 어플리케이션 보안 프로젝트(OWASP)로 웹에서 발생할 수 잇는 정보로, [OWASP Top 10](https://owasp.org/www-project-top-ten/)은 Open Web Application Security Project의 주요 보안 위협을 나열한 리스트입니다. 이 리스트는 웹 응용 프로그램 보안에 대한 주요 위협을 식별하고 예방하기 위해 개발되었습니다. 이 목록에는 인젝션, 인증 및 세션 관리 문제, 민감한 데이터 노출 등이 포함되어 있습니다. OWASP Top 10 목록은 주기적으로 업데이트되므로 최신 버전을 확인하는 것이 중요합니다.
+
 
 <br>
 
@@ -536,3 +595,14 @@ sudo systemctl reload nginx
 ## 참고
 - [Using dangerouslySetInnerHTML in a React application](https://blog.logrocket.com/using-dangerouslysetinnerhtml-react-application/)
 - [Preventing XSS in React (Part 2): dangerouslySetInnerHTML](https://pragmaticwebsecurity.com/articles/spasecurity/react-xss-part2)
+- [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+- [Strict-Transport-Security](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
+- [X-Content-Type-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options)
+- [X-Frame-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
+- [X-XSS-Protection](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+- [Mozilla web security guidelines](https://infosec.mozilla.org/guidelines/web_security)
+- [Next.js Security Headers](https://www.geeksforgeeks.org/next-js-security-headers/)
+- [NExt,js Content Security Policy](https://nextjs.org/docs/pages/building-your-application/configuring/content-security-policy)
+- [Understanding XSS Attacks](https://vercel.com/guides/understanding-xss-attacks)
+- [How to Think About Security in Next.js](https://nextjs.org/blog/security-nextjs-server-components-actions)
+- [How to add Security Headers to Your Site](https://servebolt.com/help/security/how-to-add-security-headers-to-your-site/)
